@@ -96,7 +96,7 @@ const ClasificacionScreen = () => {
           ))}
         </ScrollView>
       ) : (
-        <Text>No data available</Text>
+        <Text>Cargando...</Text>
       )}
     </View>
   );
