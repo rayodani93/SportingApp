@@ -45,6 +45,14 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Goleadores</Text>
         </TouchableOpacity>
+        {/* Botón para navegar a LoginScreen */}
+        <TouchableOpacity 
+          style={styles.button} 
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('Login')} // Navega a la pantalla de inicio de sesión
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
