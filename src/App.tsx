@@ -6,6 +6,7 @@ import MiembrosScreen from './presentation/screens/MiembrosScreen';
 import NoticiasScreen from './presentation/screens/NoticiasScreen';
 import ClasificacionScreen from './presentation/screens/ClasificacionScreen';
 import GoleadoresScreen from './presentation/screens/GoleadoresScreen';
+import LoginScreen from './presentation/screens/LoginScreen'; // Asegúrate de que esta ruta sea correcta
 
 const Stack = createStackNavigator();
 
@@ -18,10 +19,10 @@ const App = () => {
         <Stack.Screen name="Noticias" component={NoticiasScreen} />
         <Stack.Screen name="Clasificacion" component={ClasificacionScreen} />
         <Stack.Screen name="Goleadores" component={GoleadoresScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default App;
-
