@@ -1,40 +1,47 @@
-// src/presentation/screens/LoginScreen.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, Input, Text } from 'react-native-elements';
-import { LoginScreenNavigationProp } from '../../types/navigation';
+import { TextInput, Button, Title } from 'react-native-paper';
+import { LoginScreenNavigationProp } from '../../types/navigation'; // Asegúrate de que la ruta es correcta
 
 type Props = {
   navigation: LoginScreenNavigationProp;
 };
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <View style={styles.container}>
-      <Text h3 style={styles.title}>Login Screen</Text>
-      <Input
-        placeholder="Email"
-        leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-        containerStyle={styles.inputContainer}
+      <Title style={styles.title}>Iniciar Sesión</Title>
+
+      <TextInput
+        label="Correo Electrónico"
+        value={email}
+        mode="outlined"
+        onChangeText={setEmail}
+        style={styles.input}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email" // Usamos autoComplete en lugar de autoCompleteType
       />
-      <Input
-        placeholder="Password"
-        leftIcon={{ type: 'font-awesome', name: 'lock' }}
+
+      <TextInput
+        label="Contraseña"
+        value={password}
+        mode="outlined"
+        onChangeText={setPassword}
+        style={styles.input}
         secureTextEntry
-        containerStyle={styles.inputContainer}
       />
-      <Button
-        title="Login"
-        onPress={() => navigation.navigate('Login')}
-        buttonStyle={styles.button}
-        containerStyle={styles.buttonContainer}
-      />
-      <Button
-        title="Registro"
-        onPress={() => navigation.navigate('Register')}
-        buttonStyle={styles.button}
-        containerStyle={styles.buttonContainer}
-      />
+
+      <Button mode="contained" onPress={() => console.log('Iniciar sesión')} style={styles.button}>
+        Iniciar Sesión
+      </Button>
+
+      <Button mode="text" onPress={() => navigation.navigate('Register')} style={styles.registerButton}>
+        ¿No tienes cuenta? Regístrate
+      </Button>
     </View>
   );
 };
@@ -43,34 +50,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
-    marginBottom: 30,
-    textAlign: 'center',
-    color: 'black',
-  },
-  image: {
-    width: 240,
-    height: 280,
     marginBottom: 20,
-    resizeMode: 'contain', 
+    textAlign: 'center',
+  },
+  input: {
+    marginBottom: 20,
   },
   button: {
-    backgroundColor: 'black',
+    marginTop: 10,
   },
-  buttonContainer: {
-    width: '80%',
-    marginVertical: 10,
-  },
-  inputContainer: {
-    
-    width: '80%',
+  registerButton: {
+    marginTop: 10,
   },
 });
-
 
 export default LoginScreen;
