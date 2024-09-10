@@ -1,26 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonStyles, colors } from '../../types/theme'; // Importamos el tema
 
-const NoticiasScreen = () => {
+const NoticiasScreen: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Pantalla de Noticias</Text>
-    </View>
+    <LinearGradient colors={[colors.primary, colors.secondary]} style={commonStyles.container}>
+      <Text style={commonStyles.title}>Noticias</Text>
+      <TouchableOpacity style={commonStyles.button}>
+        <Text style={commonStyles.buttonText}>Ver más noticias</Text>
+      </TouchableOpacity>
+    </LinearGradient>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-});
 
 export default NoticiasScreen;

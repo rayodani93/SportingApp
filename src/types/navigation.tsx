@@ -9,6 +9,8 @@ export type RootStackParamList = {
   Noticias: undefined; // Agregamos Noticias
   Clasificacion: undefined; // Agregamos Clasificación
   Goleadores: undefined; // Agregamos Goleadores
+  JugadorRegister: undefined; // Nueva pantalla para registro de jugadores
+  AficionadoRegister: undefined; // Nueva pantalla para registro de aficionados
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<

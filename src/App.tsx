@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './presentation/screens/HomeScreen';
@@ -6,7 +6,10 @@ import MiembrosScreen from './presentation/screens/MiembrosScreen';
 import NoticiasScreen from './presentation/screens/NoticiasScreen';
 import ClasificacionScreen from './presentation/screens/ClasificacionScreen';
 import GoleadoresScreen from './presentation/screens/GoleadoresScreen';
-import LoginScreen from './presentation/screens/LoginScreen'; // Asegúrate de que esta ruta sea correcta
+import LoginScreen from './presentation/screens/LoginScreen';
+import RegisterScreen from './presentation/screens/RegisterScreen';
+import JugadorRegisterScreen from './presentation/screens/JugadorRegisterScreen';
+import AficionadoRegisterScreen from './presentation/screens/AficionadoRegisterScreen';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +22,10 @@ const App = () => {
         <Stack.Screen name="Noticias" component={NoticiasScreen} />
         <Stack.Screen name="Clasificacion" component={ClasificacionScreen} />
         <Stack.Screen name="Goleadores" component={GoleadoresScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} /> 
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="JugadorRegister" component={JugadorRegisterScreen} />
+        <Stack.Screen name="AficionadoRegister" component={AficionadoRegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

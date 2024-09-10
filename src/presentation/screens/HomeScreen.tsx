@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { HomeScreenNavigationProp } from '../../types/navigation'; // Asegúrate de que la ruta es correcta
-import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from 'react-native-linear-gradient'; // Reemplazo de expo-linear-gradient
+import { HomeScreenNavigationProp } from '../../types/navigation';
+import { colors } from '../../types/theme'; // Importamos los colores
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -10,54 +11,33 @@ type Props = {
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-
-
-      {/* Botón de inicio de sesión en la esquina superior derecha */}
       <TouchableOpacity 
         style={styles.loginButton} 
         activeOpacity={0.7}
         onPress={() => navigation.navigate('Login')}
       >
-      <Image 
-        source={require('../../assets/logo_login.png')} // Ruta de la imagen del escudo
-        style={styles.loginIcon}
-      />
+        <Image 
+          source={require('../../assets/logo_login.png')} 
+          style={styles.loginIcon}
+        />
       </TouchableOpacity>
 
-      {/*<Text style={styles.title}>Sporting de Maderasa Bar Juanjo</Text>*/}
       <Image 
-        source={require('../../assets/escudo.png')} // Ruta de la imagen del escudo
+        source={require('../../assets/escudo.png')} 
         style={styles.logo}
       />
 
-      {/* Menú de navegación debajo del escudo */}
       <View style={styles.menu}>
-        <TouchableOpacity 
-          style={styles.button} 
-          activeOpacity={0.7} // Ajusta la opacidad al presionar
-          onPress={() => navigation.navigate('Miembros')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Miembros')}>
           <Text style={styles.buttonText}>Miembros</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.button} 
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('Noticias')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Noticias')}>
           <Text style={styles.buttonText}>Noticias</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.button} 
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('Clasificacion')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Clasificacion')}>
           <Text style={styles.buttonText}>Clasificación</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.button} 
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('Goleadores')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Goleadores')}>
           <Text style={styles.buttonText}>Goleadores</Text>
         </TouchableOpacity>
       </View>
@@ -70,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF', // Fondo blanco
+    backgroundColor: colors.white, // Fondo blanco
   },
   loginButton: {
     position: 'absolute',
@@ -82,37 +62,32 @@ const styles = StyleSheet.create({
     height: 40,
     resizeMode: 'contain',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#000', // Color del título en negro
-    marginBottom: 20,
-    fontFamily: 'debrosee', // Usa aquí la fuente Roboto
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    padding: 10,
-  },
   logo: {
-    width: 250,
-    height: 250,
+    width: 150,
+    height: 150,
     resizeMode: 'contain',
+    marginBottom: 20,
   },
   menu: {
     marginTop: 20,
     width: '80%',
   },
   button: {
-    backgroundColor: '#000', // Fondo negro
+    backgroundColor: colors.primary, // Fondo azul
     padding: 15,
-    borderRadius: 5,
-    marginVertical: 7,
+    borderRadius: 30,
+    marginVertical: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   buttonText: {
-    color: '#FFF', // Texto en blanco
-    fontSize: 16,
+    color: colors.white, // Texto en blanco
+    fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'Roboto', // Usa aquí la fuente Roboto para el texto de los botones
     textTransform: 'uppercase',
   },
 });

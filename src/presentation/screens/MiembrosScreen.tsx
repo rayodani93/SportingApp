@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, FlatList, View, Text } from 'react-native';
 import PlayerCard from './components/PlayerCard'; // Asegúrate de que esta ruta es correcta
+import LinearGradient from 'react-native-linear-gradient';
+import { commonStyles, colors } from '../../types/theme'; // Importamos los estilos y colores comunes
 
 // Define el tipo de un jugador
 type Player = {
@@ -45,8 +47,7 @@ const renderItem = ({ item }: { item: Player }) => (
 
 const MiembrosScreen = () => {
   return (
-    <View style={styles.container}>
-      {/* Título encima de las tarjetas */}
+    <LinearGradient colors={[colors.primary, colors.secondary]} style={styles.container}>
       <Text style={styles.title}>Sporting Maderasa Bar Juanjo 2024/25</Text>
       <FlatList
         data={players} // La lista de jugadores
@@ -54,14 +55,14 @@ const MiembrosScreen = () => {
         keyExtractor={(item) => item.id.toString()} // Clave única para cada elemento
         numColumns={2} // Establece dos columnas
       />
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000', // Fondo negro
+    justifyContent: 'center',
     padding: 10,
   },
   title: {
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    color: '#FFD700', // Color amarillo del título
+    color: colors.white, // Usamos el color blanco para el texto
   },
   item: {
     flex: 1,

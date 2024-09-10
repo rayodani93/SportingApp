@@ -4,7 +4,6 @@ import axios from 'axios';
 import { parseDocument } from 'htmlparser2';
 import { findAll, getInnerHTML } from 'domutils';
 import { decode } from 'html-entities';
-import { Picker } from '@react-native-picker/picker'; // Importa Picker desde el nuevo paquete
 
 interface TableData {
   headers: string[];
@@ -50,7 +49,7 @@ const ClasificacionScreen = () => {
 
         console.log('Total tables found:', tables.length); // Verificar la cantidad de tablas
 
-        if (tables.length > 0) { // Asegúrate de que hay al menos una tabla
+        if (tables.length > 0) {
           const table = tables[9]; // Cambia este índice si es necesario
           const headers = ['Pos.', 'Equipo', 'Puntos', 'J', 'G', 'E', 'P', 'F', 'C', 'Últimos'];
           const rows = findAll(elem => elem.name === 'tr', table.children);
@@ -66,12 +65,12 @@ const ClasificacionScreen = () => {
             if (filteredCells.length > 0) {
               return [String(index + 1), ...filteredCells]; // Añadir la posición como primer elemento
             }
-            return null; // Si la fila está vacía, devolver null
-          }).filter(row => row !== null); // Filtrar filas nulas
+            return null;
+          }).filter(row => row !== null);
 
           setTableData({
             headers: headers,
-            rows: rowData, // Mostrar todas las filas
+            rows: rowData,
           });
         } else {
           console.error('No se encontraron suficientes tablas en el documento.');
@@ -106,7 +105,7 @@ const ClasificacionScreen = () => {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={colors.primary} />
       ) : isError ? (
         <Text style={styles.errorText}>Error al cargar los datos.</Text>
       ) : tableData ? (
@@ -123,7 +122,6 @@ const ClasificacionScreen = () => {
               {row.map((cell, cellIndex) => (
                 <View key={cellIndex} style={[
                   styles.cell,
-                  rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow,
                   cellIndex === 0 ? styles.firstColumn : styles.otherColumn
                 ]}>
                   <Text style={styles.cellText}>{cell}</Text>
@@ -143,7 +141,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f8f9fa', // Fondo claro
+    backgroundColor: colors.primary, // Fondo azul para toda la pantalla
   },
   pickerContainer: {
     marginBottom: 20,
@@ -164,7 +162,7 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    backgroundColor: '#343a40', // Color de fondo del encabezado
+    backgroundColor: colors.primary, // Color azul del encabezado
     paddingVertical: 10,
     borderRadius: 5,
   },
@@ -180,29 +178,25 @@ const styles = StyleSheet.create({
     flex: 1, // Tomar el espacio restante
   },
   headerText: {
-    color: '#ffffff', // Texto blanco
+    color: colors.white, // Texto blanco en el encabezado
     fontWeight: 'bold',
   },
   row: {
     flexDirection: 'row',
     marginVertical: 5,
     borderRadius: 5,
+    backgroundColor: colors.white, // Fondo blanco para las filas
   },
   cell: {
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#dee2e6', // Bordes suaves
+    borderColor: '#dee2e6',
     alignItems: 'center',
   },
-  evenRow: {
-    backgroundColor: '#ffffff', // Color de fondo para filas pares
-  },
-  oddRow: {
-    backgroundColor: '#f1f3f5', // Color de fondo para filas impares
-  },
   cellText: {
-    color: '#212529', // Texto oscuro
+    color: colors.primary, // Texto azul para las filas
+    fontWeight: 'bold', // Texto en negrita
   },
   errorText: {
     color: '#dc3545', // Texto rojo para errores
