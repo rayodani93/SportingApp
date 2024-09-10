@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, useWindowDimensions, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { parseDocument } from 'htmlparser2';
 import { findAll, getInnerHTML } from 'domutils';
@@ -20,14 +20,21 @@ const ClasificacionScreen = () => {
   const [tableData, setTableData] = useState<TableData | null>(null);
   const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
   const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const fetchClasificacion = async () => {
+      setIsLoading(true);
+      setIsError(false);
+
       try {
+        // Realizar la petición de inicio de sesión
+        await axios.post('https://aranjuez.ffmadrid.es/nfg/NLogin?NUser=M7445&NPass=1010');
+
         // Obtener la clasificación
         const response = await axios.get(
-          'https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=30&codcompeticion=1005401&codgrupo=1005402&codjornada=30&cod_agrupacion=1',
+          'https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=12&codcompeticion=1005401&codgrupo=1005402&codjornada=12&cod_agrupacion=1',
           {
             withCredentials: true,
           }
@@ -43,17 +50,22 @@ const ClasificacionScreen = () => {
 
         if (tables.length > 0) { // Asegúrate de que hay al menos una tabla
           const table = tables[9]; // Cambia este índice si es necesario
-          const headers = ['Equipo', 'Ptos', 'J', 'G', 'E', 'P', 'F', 'C', 'Últimos']
+          const headers = ['Pos.', 'Equipo', 'Puntos', 'J', 'G', 'E', 'P', 'F', 'C', 'Últimos'];
           const rows = findAll(elem => elem.name === 'tr', table.children);
 
           // Extraer datos de las filas
-          const rowData = rows.slice(1).map(row => {
+          const rowData = rows.slice(1).map((row, index) => {
+            index--;
             const cells = findAll(elem => elem.name === 'td', row.children);
             const rowCells = cells.map(cell => cleanHTML(getInnerHTML(cell)));
 
             // Filtra las columnas: queremos 8 columnas a partir de la tercera
-            return rowCells.slice(2, 11); // Omitir las dos primeras columnas
-          });
+            const filteredCells = rowCells.slice(2, 11);
+            if (filteredCells.length > 0) {
+              return [String(index + 1), ...filteredCells]; // Añadir la posición como primer elemento
+            }
+            return null; // Si la fila está vacía, devolver null
+          }).filter(row => row !== null); // Filtrar filas nulas
 
           setTableData({
             headers: headers,
@@ -64,6 +76,9 @@ const ClasificacionScreen = () => {
         }
       } catch (error) {
         console.error('Error fetching clasificacion:', error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -71,32 +86,40 @@ const ClasificacionScreen = () => {
   }, []);
 
   // Filtra las columnas según la orientación
-  const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 6) : tableData?.headers;
-  const filteredRows = isPortrait ? tableData?.rows.map(row => row.slice(0, 6)) : tableData?.rows;
+  const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 4) : tableData?.headers;
+  const filteredRows = isPortrait ? tableData?.rows.map(row => row.slice(0, 4)) : tableData?.rows;
 
   return (
     <View style={styles.container}>
-      {tableData ? (
-        <ScrollView style={styles.scrollContainer}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : isError ? (
+        <Text style={styles.errorText}>Error al cargar los datos.</Text>
+      ) : tableData ? (
+        <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
           <View style={styles.headerRow}>
             {filteredHeaders?.map((header, index) => (
-              <View key={index} style={styles.headerCell}>
-                <Text>{header}</Text>
+              <View key={index} style={[styles.headerCell, index === 0 ? styles.firstColumn : styles.otherColumn]}>
+                <Text style={styles.headerText}>{header}</Text>
               </View>
             ))}
           </View>
           {filteredRows?.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
               {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.cell}>
-                  <Text>{cell}</Text>
+                <View key={cellIndex} style={[
+                  styles.cell,
+                  rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow,
+                  cellIndex === 0 ? styles.firstColumn : styles.otherColumn
+                ]}>
+                  <Text style={styles.cellText}>{cell}</Text>
                 </View>
               ))}
             </View>
           ))}
         </ScrollView>
       ) : (
-        <Text>Cargando...</Text>
+        <Text style={styles.noDataText}>No hay datos disponibles</Text>
       )}
     </View>
   );
@@ -106,34 +129,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    backgroundColor: '#f8f9fa', // Fondo claro
   },
   scrollContainer: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: 20,
+  },
   headerRow: {
     flexDirection: 'row',
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#343a40', // Color de fondo del encabezado
+    paddingVertical: 10,
+    borderRadius: 5,
   },
   headerCell: {
     flex: 1,
     padding: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
     alignItems: 'center',
+  },
+  firstColumn: {
+    flex: 0, // Ajustar el tamaño al contenido
+  },
+  otherColumn: {
+    flex: 1, // Tomar el espacio restante
+  },
+  headerText: {
+    color: '#ffffff', // Texto blanco
+    fontWeight: 'bold',
   },
   row: {
     flexDirection: 'row',
+    marginVertical: 5,
+    borderRadius: 5,
   },
   cell: {
     flex: 1,
-    padding: 5,
+    padding: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#dee2e6', // Bordes suaves
+    alignItems: 'center',
+  },
+  evenRow: {
+    backgroundColor: '#ffffff', // Color de fondo para filas pares
+  },
+  oddRow: {
+    backgroundColor: '#f1f3f5', // Color de fondo para filas impares
+  },
+  cellText: {
+    color: '#212529', // Texto oscuro
+  },
+  errorText: {
+    color: '#dc3545', // Texto rojo para errores
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  noDataText: {
+    color: '#6c757d', // Texto gris para cuando no hay datos
+    textAlign: 'center',
+    marginVertical: 20,
   },
 });
 
