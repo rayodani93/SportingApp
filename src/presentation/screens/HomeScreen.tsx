@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { HomeScreenNavigationProp } from '../../types/navigation'; // Asegúrate de que la ruta es correcta
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -9,7 +10,21 @@ type Props = {
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sporting de Maderasa Bar Juanjo</Text>
+
+
+      {/* Botón de inicio de sesión en la esquina superior derecha */}
+      <TouchableOpacity 
+        style={styles.loginButton} 
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate('Login')}
+      >
+      <Image 
+        source={require('../../assets/logo_login.png')} // Ruta de la imagen del escudo
+        style={styles.loginIcon}
+      />
+      </TouchableOpacity>
+
+      {/*<Text style={styles.title}>Sporting de Maderasa Bar Juanjo</Text>*/}
       <Image 
         source={require('../../assets/escudo.png')} // Ruta de la imagen del escudo
         style={styles.logo}
@@ -45,14 +60,6 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Goleadores</Text>
         </TouchableOpacity>
-        {/* Botón para navegar a LoginScreen */}
-        <TouchableOpacity 
-          style={styles.button} 
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('Login')} // Navega a la pantalla de inicio de sesión
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -64,6 +71,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF', // Fondo blanco
+  },
+  loginButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+  },
+  loginIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
   },
   title: {
     fontSize: 28,
