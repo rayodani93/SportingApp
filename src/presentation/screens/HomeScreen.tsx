@@ -33,16 +33,14 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <Icon name="bars" size={30} color={colors.primary} />
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={styles.logoButton}
-      >
-      <Image 
-        source={require('../../assets/logo_adidas.png')} 
-        style={styles.logoIcon}
-      />
+      <TouchableOpacity style={styles.logoButton}>
+        <Image 
+          source={require('../../assets/logo_adidas.png')} 
+          style={styles.logoIcon}
+        />
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.loginButton} 
         activeOpacity={0.7}
         onPress={() => navigation.navigate('Login')}
@@ -50,7 +48,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <Icon name="user" size={30} color={colors.primary} />
       </TouchableOpacity>
 
-
+      {/* Imagen agregada en el medio */}
+      <View style={styles.imageContainer}>
+        <Image 
+          source={require('../../assets/Estefam1.jpeg')} 
+          style={styles.estefamImage}
+        />
+      </View>
 
       <Modal
         animationType="slide"
@@ -114,6 +118,17 @@ const styles = StyleSheet.create({
     width: 170,
     height: 100,
     resizeMode: 'contain',
+  },
+  imageContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  estefamImage: {
+    width: 250,
+    height: 250,
+    borderRadius: 125,
+    resizeMode: 'cover',
   },
   fullScreenMenu: {
     flex: 1,

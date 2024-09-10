@@ -26,3 +26,15 @@ export const createJugador = async (
   }
   return data;
 };
+
+export const createNoticia = async (titulo: string, imagen: string, contenido: string) => {
+  const { data, error } = await supabase.from('noticias').insert([
+    { titulo, imagen, contenido }
+  ]);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
