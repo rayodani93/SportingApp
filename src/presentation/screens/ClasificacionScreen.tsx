@@ -4,6 +4,7 @@ import axios from 'axios';
 import { parseDocument } from 'htmlparser2';
 import { findAll, getInnerHTML } from 'domutils';
 import { decode } from 'html-entities';
+import { colors } from '../../types/theme'; // Importamos los colores
 
 interface TableData {
   headers: string[];
@@ -18,11 +19,10 @@ const cleanHTML = (html: string) => {
 
 const ClasificacionScreen = () => {
   const [tableData, setTableData] = useState<TableData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [selectedJornada, setSelectedJornada] = useState(30); // Valor inicial para la jornada
   const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
   const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const fetchClasificacion = async () => {
@@ -35,7 +35,7 @@ const ClasificacionScreen = () => {
 
         // Obtener la clasificación
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=${selectedJornada}&codcompeticion=1005401&codgrupo=1005402&cod_agrupacion=1`,
+          'https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=12&codcompeticion=1005401&codgrupo=1005402&codjornada=12&cod_agrupacion=1',
           {
             withCredentials: true,
           }
@@ -84,7 +84,7 @@ const ClasificacionScreen = () => {
     };
 
     fetchClasificacion();
-  }, [selectedJornada]); // Añadir selectedJornada como dependencia
+  }, []);
 
   // Filtra las columnas según la orientación
   const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 4) : tableData?.headers;
@@ -92,18 +92,6 @@ const ClasificacionScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedJornada}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedJornada(itemValue)}
-        >
-          {[...Array(30).keys()].map(i => (
-            <Picker.Item key={i+1} label={`Jornada ${i+1}`} value={i+1} />
-          ))}
-        </Picker>
-      </View>
-
       {isLoading ? (
         <ActivityIndicator size="large" color={colors.primary} />
       ) : isError ? (
@@ -142,17 +130,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: colors.primary, // Fondo azul para toda la pantalla
-  },
-  pickerContainer: {
-    marginBottom: 20,
-    backgroundColor: '#ffffff',
-    borderRadius: 5,
-    borderColor: '#ced4da',
-    borderWidth: 1,
-  },
-  picker: {
-    height: 50,
-    width: '100%',
   },
   scrollContainer: {
     flex: 1,
