@@ -4,6 +4,7 @@ import axios from 'axios';
 import { parseDocument } from 'htmlparser2';
 import { findAll, getInnerHTML } from 'domutils';
 import { decode } from 'html-entities';
+import { Picker } from '@react-native-picker/picker'; // Importa Picker desde el nuevo paquete
 import { colors } from '../../types/theme'; // Importamos los colores
 
 interface TableData {
@@ -19,10 +20,11 @@ const cleanHTML = (html: string) => {
 
 const ClasificacionScreen = () => {
   const [tableData, setTableData] = useState<TableData | null>(null);
-  const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
-  const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [selectedJornada, setSelectedJornada] = useState(30); // Valor inicial para la jornada
+  const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
+  const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
 
   useEffect(() => {
     const fetchClasificacion = async () => {
@@ -35,7 +37,7 @@ const ClasificacionScreen = () => {
 
         // Obtener la clasificación
         const response = await axios.get(
-          'https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=12&codcompeticion=1005401&codgrupo=1005402&codjornada=12&cod_agrupacion=1',
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=${selectedJornada}&codcompeticion=1005401&codgrupo=1005402&cod_agrupacion=1`,
           {
             withCredentials: true,
           }
@@ -49,7 +51,7 @@ const ClasificacionScreen = () => {
 
         console.log('Total tables found:', tables.length); // Verificar la cantidad de tablas
 
-        if (tables.length > 0) {
+        if (tables.length > 0) { // Asegúrate de que hay al menos una tabla
           const table = tables[9]; // Cambia este índice si es necesario
           const headers = ['Pos.', 'Equipo', 'Puntos', 'J', 'G', 'E', 'P', 'F', 'C', 'Últimos'];
           const rows = findAll(elem => elem.name === 'tr', table.children);
@@ -65,12 +67,12 @@ const ClasificacionScreen = () => {
             if (filteredCells.length > 0) {
               return [String(index + 1), ...filteredCells]; // Añadir la posición como primer elemento
             }
-            return null;
-          }).filter(row => row !== null);
+            return null; // Si la fila está vacía, devolver null
+          }).filter(row => row !== null); // Filtrar filas nulas
 
           setTableData({
             headers: headers,
-            rows: rowData,
+            rows: rowData, // Mostrar todas las filas
           });
         } else {
           console.error('No se encontraron suficientes tablas en el documento.');
@@ -84,7 +86,7 @@ const ClasificacionScreen = () => {
     };
 
     fetchClasificacion();
-  }, []);
+  }, [selectedJornada]); // Añadir selectedJornada como dependencia
 
   // Filtra las columnas según la orientación
   const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 4) : tableData?.headers;
@@ -92,15 +94,27 @@ const ClasificacionScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={selectedJornada}
+          style={styles.picker}
+          onValueChange={(itemValue) => setSelectedJornada(itemValue)}
+        >
+          {[...Array(30).keys()].map(i => (
+            <Picker.Item key={i+1} label={`Jornada ${i+1}`} value={i+1} />
+          ))}
+        </Picker>
+      </View>
+
       {isLoading ? (
-        <ActivityIndicator size="large" color={colors.primary} />
+        <ActivityIndicator size="large" color="#0000ff" />
       ) : isError ? (
         <Text style={styles.errorText}>Error al cargar los datos.</Text>
       ) : tableData ? (
         <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
           <View style={styles.headerRow}>
             {filteredHeaders?.map((header, index) => (
-              <View key={index} style={[styles.headerCell, index === 0 ? styles.firstColumn : styles.otherColumn]}>
+              <View key={index} style={[styles.headerCell, index === 1 ? styles.secondColumn : styles.otherColumn]}>
                 <Text style={styles.headerText}>{header}</Text>
               </View>
             ))}
@@ -110,7 +124,8 @@ const ClasificacionScreen = () => {
               {row.map((cell, cellIndex) => (
                 <View key={cellIndex} style={[
                   styles.cell,
-                  cellIndex === 0 ? styles.firstColumn : styles.otherColumn
+                  rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow,
+                  cellIndex === 1 ? styles.secondColumn : styles.firstColumn
                 ]}>
                   <Text style={styles.cellText}>{cell}</Text>
                 </View>
@@ -129,7 +144,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: colors.primary, // Fondo azul para toda la pantalla
+    backgroundColor: '#f8f9fa', // Fondo claro
+  },
+  pickerContainer: {
+    marginBottom: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+    borderColor: '#ced4da',
+    borderWidth: 1,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
   },
   scrollContainer: {
     flex: 1,
@@ -139,7 +165,7 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    backgroundColor: colors.primary, // Color azul del encabezado
+    backgroundColor: colors.primary, // Color de fondo del encabezado
     paddingVertical: 10,
     borderRadius: 5,
   },
@@ -149,31 +175,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   firstColumn: {
-    flex: 0, // Ajustar el tamaño al contenido
+    flex: 1, // Ajustar el tamaño al contenido
+  },
+  secondColumn: {
+    flex: 4, // Ajustar el tamaño al contenido
   },
   otherColumn: {
     flex: 1, // Tomar el espacio restante
   },
   headerText: {
-    color: colors.white, // Texto blanco en el encabezado
+    color: '#ffffff', // Texto blanco
     fontWeight: 'bold',
   },
   row: {
     flexDirection: 'row',
     marginVertical: 5,
     borderRadius: 5,
-    backgroundColor: colors.white, // Fondo blanco para las filas
   },
   cell: {
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#dee2e6',
+    borderColor: '#dee2e6', // Bordes suaves
     alignItems: 'center',
   },
+  evenRow: {
+    backgroundColor: '#ffffff', // Color de fondo para filas pares
+  },
+  oddRow: {
+    backgroundColor: '#f1f3f5', // Color de fondo para filas impares
+  },
   cellText: {
-    color: colors.primary, // Texto azul para las filas
-    fontWeight: 'bold', // Texto en negrita
+    color: '#212529', // Texto oscuro
   },
   errorText: {
     color: '#dc3545', // Texto rojo para errores

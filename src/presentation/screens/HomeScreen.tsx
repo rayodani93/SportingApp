@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient'; // Reemplazo de expo-linear-gradient
 import { HomeScreenNavigationProp } from '../../types/navigation';
 import { colors } from '../../types/theme'; // Importamos los colores
 
@@ -70,22 +69,24 @@ const styles = StyleSheet.create({
   },
   menu: {
     marginTop: 20,
-    width: '80%',
+    width: '60%',
   },
   button: {
-    backgroundColor: colors.primary, // Fondo azul
+    backgroundColor: colors.white, // Fondo azul
+    borderColor: colors.primary,
+    borderWidth: 1.4,
     padding: 15,
-    borderRadius: 30,
+    borderRadius: 10,
     marginVertical: 10,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#fff',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
   },
   buttonText: {
-    color: colors.white, // Texto en blanco
+    color: colors.primary, // Texto en blanco
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'uppercase',
