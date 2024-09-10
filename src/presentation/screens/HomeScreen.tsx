@@ -1,45 +1,85 @@
-import React from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Text, TouchableOpacity, Modal } from 'react-native';
 import { HomeScreenNavigationProp } from '../../types/navigation';
-import { colors } from '../../types/theme'; // Importamos los colores
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors } from '../../types/theme';
 
 type Props = {
   navigation: HomeScreenNavigationProp;
 };
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const menuOptions = [
+    { label: 'Miembros', value: 'Miembros' },
+    { label: 'Noticias', value: 'Noticias' },
+    { label: 'Clasificación', value: 'Clasificacion' },
+    { label: 'Goleadores', value: 'Goleadores' },
+  ];
+
+  const handleNavigation = (screen: 'Miembros' | 'Noticias' | 'Clasificacion' | 'Goleadores') => {
+    setMenuVisible(false);
+    navigation.navigate(screen);
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.menuButton}
+        activeOpacity={0.7}
+        onPress={() => setMenuVisible(true)}
+      >
+        <Icon name="bars" size={30} color={colors.primary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={styles.logoButton}
+      >
+      <Image 
+        source={require('../../assets/logo_adidas.png')} 
+        style={styles.logoIcon}
+      />
+      </TouchableOpacity>
+
       <TouchableOpacity 
         style={styles.loginButton} 
         activeOpacity={0.7}
         onPress={() => navigation.navigate('Login')}
       >
-        <Image 
-          source={require('../../assets/logo_login.png')} 
-          style={styles.loginIcon}
-        />
+        <Icon name="user" size={30} color={colors.primary} />
       </TouchableOpacity>
 
-      <Image 
-        source={require('../../assets/escudo.png')} 
-        style={styles.logo}
-      />
 
-      <View style={styles.menu}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Miembros')}>
-          <Text style={styles.buttonText}>Miembros</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Noticias')}>
-          <Text style={styles.buttonText}>Noticias</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Clasificacion')}>
-          <Text style={styles.buttonText}>Clasificación</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Goleadores')}>
-          <Text style={styles.buttonText}>Goleadores</Text>
-        </TouchableOpacity>
-      </View>
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={menuVisible}
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <View style={styles.fullScreenMenu}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            activeOpacity={0.7}
+            onPress={() => setMenuVisible(false)}
+          >
+            <Icon name="times" size={30} color={colors.primary} />
+          </TouchableOpacity>
+
+          <View style={styles.modalContent}>
+            {menuOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.modalOption}
+                onPress={() => handleNavigation(option.value as 'Miembros' | 'Noticias' | 'Clasificacion' | 'Goleadores')}
+              >
+                <Text style={styles.modalText}>{option.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -49,7 +89,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white, // Fondo blanco
+    backgroundColor: colors.white,
+  },
+  menuButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+  },
+  logoButton: {
+    position: 'absolute',
+    top: 10,
   },
   loginButton: {
     position: 'absolute',
@@ -61,35 +110,37 @@ const styles = StyleSheet.create({
     height: 40,
     resizeMode: 'contain',
   },
-  logo: {
-    width: 150,
-    height: 150,
+  logoIcon: {
+    width: 170,
+    height: 100,
     resizeMode: 'contain',
-    marginBottom: 20,
   },
-  menu: {
-    marginTop: 20,
-    width: '60%',
-  },
-  button: {
-    backgroundColor: colors.white, // Fondo azul
-    borderColor: colors.primary,
-    borderWidth: 1.4,
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 10,
+  fullScreenMenu: {
+    flex: 1,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#fff',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
-  buttonText: {
-    color: colors.primary, // Texto en blanco
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+  },
+  modalContent: {
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalOption: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.primary,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalText: {
     fontSize: 18,
+    color: colors.primary,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
   },
 });
 
