@@ -25,55 +25,35 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.containerNav}>
-        <TouchableOpacity
-          style={styles.menuButton}
-          activeOpacity={0.7}
-          onPress={() => setMenuVisible(true)}
-        >
-          <Icon name="bars" size={30} color={colors.primary} />
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.menuButton}
+        activeOpacity={0.7}
+        onPress={() => setMenuVisible(true)}
+      >
+        <Icon name="bars" size={30} color={colors.primary} />
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.logoButton}>
-          <Image 
-            source={require('../../assets/logo_adidas.png')} 
-            style={styles.logoIcon}
-          />
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.logoButton}>
+        <Image 
+          source={require('../../assets/logo_adidas.png')} 
+          style={styles.logoIcon}
+        />
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.loginButton} 
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Icon name="user" size={30} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.loginButton} 
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate('Login')}
+      >
+        <Icon name="user" size={30} color={colors.primary} />
+      </TouchableOpacity>
 
-        {/* Imagen agregada en el medio */}
-      <View style={styles.sliderContainer}>
-          <Image 
-              source={require('../../assets/image1.png')} 
-              style={styles.sliderImage}
-          />
-      </View>
-      <View style={styles.bodyContainer}>
-        <View style={styles.newsContainer}>
-          <Image 
-              source={require('../../assets/Estefam1.jpeg')} 
-              style={styles.estefamImage}
-          />
-        </View>
-        <View style={styles.sponsorsContainer}>
-          <Image 
-                source={require('../../assets/logo_maderasa.png')} 
-                style={styles.logoMaderasa}
-          />
-          <Image 
-                source={require('../../assets/logo_maderasa.png')} 
-                style={styles.logoMaderasa}
-          />
-        </View>
+      {/* Imagen agregada en el medio */}
+      <View style={styles.imageContainer}>
+        <Image 
+          source={require('../../assets/Estefam1.jpeg')} 
+          style={styles.estefamImage}
+        />
       </View>
 
       <Modal
@@ -110,82 +90,45 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    height: '100%'
-  },
-  containerNav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-    backgroundColor: colors.white,
-    flex: 1.2
-  },
-  sliderContainer: {
-    display: 'flex',
-    flexDirection: 'row',
+    flex: 1,
     justifyContent: 'center',
-    flex: 3.8
-  },
-  bodyContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    flex: 7,
-    padding: 30
-
-  },
-  newsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  sponsorsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 25
+    backgroundColor: colors.white,
   },
   menuButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginLeft: 8
+    position: 'absolute',
+    top: 40,
+    left: 20,
   },
   logoButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    position: 'absolute',
+    top: 10,
   },
   loginButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginRight: 8
+    position: 'absolute',
+    top: 40,
+    right: 20,
+  },
+  loginIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
   },
   logoIcon: {
     width: 170,
-    height: 70,
+    height: 100,
     resizeMode: 'contain',
   },
+  imageContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   estefamImage: {
-    display: 'flex',
     width: 250,
     height: 250,
-    borderRadius: 125
-  },
-  sliderImage: {
-    height: '100%',
-    resizeMode: 'contain'
-  },
-  logoMaderasa: {
-    width: 150,
-    height: 50
+    borderRadius: 125,
+    resizeMode: 'cover',
   },
   fullScreenMenu: {
     flex: 1,
