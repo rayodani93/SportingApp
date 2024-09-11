@@ -26,7 +26,7 @@ const App = () => {
         />
         <Stack.Screen name="Miembros" component={MiembrosScreen}options={{ headerShown: false }} />
         <Stack.Screen name="Noticias" component={NoticiasScreen}options={{ headerShown: false }} />
-        <Stack.Screen name="Clasificacion" component={ClasificacionScreen} options={{ title: 'Clasificación' }}/>
+        <Stack.Screen name="Clasificacion" component={ClasificacionScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Goleadores" component={GoleadoresScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen}options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }}/>

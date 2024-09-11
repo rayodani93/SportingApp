@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { supabase } from '../../config/supabaseClient';
 import { colors, commonStyles } from '../../types/theme';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { NoticiasScreenNavigationProp } from '../../types/navigation'; 
+import TopBar from './components/TopBar'; // Importa el componente TopBar
+import { NoticiasScreenNavigationProp } from '../../types/navigation';
 
 type Props = {
   navigation: NoticiasScreenNavigationProp;
@@ -60,14 +60,14 @@ const NoticiasScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Noticias</Text>
-      
+      {/* Barra superior con el título y los iconos */}
+      <TopBar title="Noticias" />
+
       {/* Botón Añadir Noticia */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('AddNoticia')}
       >
-        <Icon name="plus" size={20} color={colors.white} />
         <Text style={styles.addButtonText}>Añadir Noticia</Text>
       </TouchableOpacity>
 
@@ -85,14 +85,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingTop: 40,
+    paddingTop: 60, // Ajuste para dejar espacio para la TopBar
     alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.primary,
-    marginBottom: 20,
   },
   listContent: {
     paddingHorizontal: 10,
@@ -129,12 +123,12 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   addButton: {
-    flexDirection: 'row',
     backgroundColor: colors.primary,
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row', // Para que el texto y el icono estén en la misma línea
   },
   addButtonText: {
     color: colors.white,
