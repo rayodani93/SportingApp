@@ -65,7 +65,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           style={styles.logoMaderasa}
         />
         <Image
-          source={require('../../assets/logo_maderasa.png')}
+          source={require('../../assets/logo_juanjo.png')}
           style={styles.logoMaderasa}
         />
       </View>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 25,
+    marginHorizontal: 40,
     marginBottom: 30,
   },
   menuButton: {
