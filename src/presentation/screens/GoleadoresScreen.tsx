@@ -37,7 +37,7 @@ const GoleadoresScreen = () => {
 
         // Obtener la clasificación
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CMP_Goleadores?cod_primaria=1000128&CodJornada=${selectedJornada}&codcompeticion=1005401&codtemporada=19&codgrupo=1005402`,
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CMP_Goleadores?cod_primaria=1000128&codcompeticion=1005401&codtemporada=19&codgrupo=1005402`,
           {
             withCredentials: true,
           }
@@ -95,18 +95,6 @@ const GoleadoresScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedJornada}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedJornada(itemValue)}
-        >
-          {[...Array(30).keys()].map(i => (
-            <Picker.Item key={i+1} label={`Jornada ${i+1}`} value={i+1} />
-          ))}
-        </Picker>
-      </View>
-
       {isLoading ? (
         <ActivityIndicator size="large" color={colors.primary} />
       ) : isError ? (
