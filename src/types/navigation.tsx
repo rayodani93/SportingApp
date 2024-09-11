@@ -9,14 +9,25 @@ export type RootStackParamList = {
   Noticias: undefined; 
   Clasificacion: undefined; 
   Goleadores: undefined; 
+  GoleadoresGeneral: undefined; // Nueva pantalla de Goleadores General
   JugadorRegister: undefined; 
   AficionadoRegister: undefined; 
-  AddNoticia: undefined; // Nueva pantalla para añadir noticias
+  AddNoticia: undefined; 
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Home'
+>;
+
+export type GoleadoresScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Goleadores'
+>;
+
+export type GoleadoresGeneralScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'GoleadoresGeneral'
 >;
 
 export type LoginScreenNavigationProp = StackNavigationProp<
@@ -37,4 +48,8 @@ export type NoticiasScreenNavigationProp = StackNavigationProp<
 export type AddNoticiaScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'AddNoticia'
+>;
+export type MiembrosScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Miembros'
 >;

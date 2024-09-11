@@ -11,6 +11,7 @@ import RegisterScreen from './presentation/screens/RegisterScreen';
 import JugadorRegisterScreen from './presentation/screens/JugadorRegisterScreen';
 import AficionadoRegisterScreen from './presentation/screens/AficionadoRegisterScreen';
 import AddNoticiaScreen from './presentation/screens/AddNoticiasScreen'; // Asegúrate de que la ruta es correcta
+import GoleadoresGeneralScreen from './presentation/screens/GoleadoresGeneralScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,15 +24,16 @@ const App = () => {
           component={HomeScreen}
           options={{ headerShown: false }} // Ocultar el encabezado para la pantalla de inicio
         />
-        <Stack.Screen name="Miembros" component={MiembrosScreen} />
-        <Stack.Screen name="Noticias" component={NoticiasScreen} />
+        <Stack.Screen name="Miembros" component={MiembrosScreen}options={{ headerShown: false }} />
+        <Stack.Screen name="Noticias" component={NoticiasScreen}options={{ headerShown: false }} />
         <Stack.Screen name="Clasificacion" component={ClasificacionScreen} options={{ title: 'Clasificación' }}/>
-        <Stack.Screen name="Goleadores" component={GoleadoresScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Registro' }}/>
-        <Stack.Screen name="JugadorRegister" component={JugadorRegisterScreen} options={{ title: 'Registro como jugador' }}/>
-        <Stack.Screen name="AficionadoRegister" component={AficionadoRegisterScreen} options={{ title: 'Registro como aficionado' }}/>
-        <Stack.Screen name="AddNoticia" component={AddNoticiaScreen} options={{ title: 'Añadir noticia' }}/> 
+        <Stack.Screen name="Goleadores" component={GoleadoresScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={LoginScreen}options={{ headerShown: false }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="JugadorRegister" component={JugadorRegisterScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="AficionadoRegister" component={AficionadoRegisterScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="AddNoticia" component={AddNoticiaScreen} options={{ headerShown: false }}/> 
+        <Stack.Screen name="GoleadoresGeneral" component={GoleadoresGeneralScreen} options={{ headerShown: false }}/> 
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, FlatList, View, Text } from 'react-native';
-import PlayerCard from './components/PlayerCard'; // Asegúrate de que esta ruta es correcta
+import { StyleSheet, FlatList, View, Text, TouchableOpacity } from 'react-native';
+import PlayerCard from './components/PlayerCard';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonStyles, colors } from '../../types/theme'; // Importamos los estilos y colores comunes
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors } from '../../types/theme';
+import { MiembrosScreenNavigationProp } from '../../types/navigation'; // Asegúrate de que el tipo de navegación está correctamente definido
 
 // Define el tipo de un jugador
 type Player = {
@@ -14,29 +16,34 @@ type Player = {
 
 // Datos de 22 jugadores
 const players: Player[] = [
-  { id: 1, nombre: 'De la Fuente', posicion: 'Mediocampista', foto: require('../../assets/delaFuente.png') },
-  { id: 2, nombre: 'Briones', posicion: 'Mediocampista', foto: require('../../assets/Briones.png') },
-  { id: 3, nombre: 'Tinkita', posicion: 'Defensa', foto: require('../../assets/Tinkita.png') },
-  { id: 4, nombre: 'Encinas', posicion: 'Portero', foto: require('../../assets/Encinas.png') },
-  { id: 5, nombre: 'Jugador 5', posicion: 'Delantero', foto: require('../../assets/delaFuente.png') },
-  { id: 6, nombre: 'Jugador 6', posicion: 'Mediocampista', foto: require('../../assets/Briones.png') },
-  { id: 7, nombre: 'Jugador 7', posicion: 'Defensa', foto: require('../../assets/Tinkita.png') },
-  { id: 8, nombre: 'Jugador 8', posicion: 'Portero', foto: require('../../assets/Encinas.png') },
-  { id: 9, nombre: 'Jugador 9', posicion: 'Delantero', foto: require('../../assets/delaFuente.png') },
-  { id: 10, nombre: 'Jugador 10', posicion: 'Mediocampista', foto: require('../../assets/Briones.png') },
-  { id: 11, nombre: 'Jugador 11', posicion: 'Defensa', foto: require('../../assets/Tinkita.png') },
-  { id: 12, nombre: 'Jugador 12', posicion: 'Portero', foto: require('../../assets/Encinas.png') },
-  { id: 13, nombre: 'Jugador 13', posicion: 'Mediocampista', foto: require('../../assets/delaFuente.png') },
-  { id: 14, nombre: 'Jugador 14', posicion: 'Mediocampista', foto: require('../../assets/Briones.png') },
-  { id: 15, nombre: 'Jugador 15', posicion: 'Defensa', foto: require('../../assets/Tinkita.png') },
-  { id: 16, nombre: 'Jugador 16', posicion: 'Portero', foto: require('../../assets/Encinas.png') },
-  { id: 17, nombre: 'Jugador 17', posicion: 'Mediocampista', foto: require('../../assets/delaFuente.png') },
-  { id: 18, nombre: 'Jugador 18', posicion: 'Mediocampista', foto: require('../../assets/Briones.png') },
-  { id: 19, nombre: 'Jugador 19', posicion: 'Defensa', foto: require('../../assets/Tinkita.png') },
-  { id: 20, nombre: 'Jugador 20', posicion: 'Portero', foto: require('../../assets/Encinas.png') },
-  { id: 21, nombre: 'Jugador 21', posicion: 'Delantero', foto: require('../../assets/delaFuente.png') },
-  { id: 22, nombre: 'Jugador 22', posicion: 'Mediocampista', foto: require('../../assets/Briones.png') },
+  { id: 1, nombre: 'Andres Briones', posicion: 'Portero', foto: require('../../assets/Andres.jpeg') },
+  { id: 2, nombre: 'Alex Pérez', posicion: 'Defensa', foto: require('../../assets/alexperez.jpeg') },
+  { id: 3, nombre: 'Tinka', posicion: 'Defensa', foto: require('../../assets/Tinka.jpeg') },
+  { id: 4, nombre: 'Encinas', posicion: 'Defensa', foto: require('../../assets/Encinas.png') },
+  { id: 5, nombre: 'Gabino', posicion: 'Defensa', foto: require('../../assets/delaFuente.png') },
+  { id: 6, nombre: 'Joni', posicion: 'Defensa', foto: require('../../assets/Briones.png') },
+  { id: 7, nombre: 'Mario', posicion: 'Defensa', foto: require('../../assets/Tinkita.png') },
+  { id: 8, nombre: 'Juli', posicion: 'Defensa', foto: require('../../assets/Juli.jpeg') },
+  { id: 9, nombre: 'Samu', posicion: 'Defensa', foto: require('../../assets/delaFuente.png') },
+  { id: 10, nombre: 'Víctor', posicion: 'Defensa', foto: require('../../assets/Victor.jpeg') },
+  { id: 11, nombre: 'Sánchez', posicion: 'Centrocampista', foto: require('../../assets/Tinkita.png') },
+  { id: 12, nombre: 'Nacho', posicion: 'Centrocampista', foto: require('../../assets/Masen.jpeg') },
+  { id: 13, nombre: 'Albert', posicion: 'Centrocampista', foto: require('../../assets/Alber.jpeg') },
+  { id: 14, nombre: 'de la Fuente', posicion: 'Centrocampista', foto: require('../../assets/delaFuente.png') },
+  { id: 15, nombre: 'Estefania', posicion: 'Centrocampista', foto: require('../../assets/EstefanAlergia.jpeg') },
+  { id: 16, nombre: 'Bellot', posicion: 'Centrocampista', foto: require('../../assets/Bellot.jpeg') },
+  { id: 17, nombre: 'Calvo', posicion: 'Centrocampista', foto: require('../../assets/delaFuente.png') },
+  { id: 18, nombre: 'Torres', posicion: 'Centrocampista', foto: require('../../assets/Briones.png') },
+  { id: 19, nombre: 'Josema', posicion: 'Centrocampista', foto: require('../../assets/Tinkita.png') },
+  { id: 20, nombre: 'Chirla', posicion: 'Delantero', foto: require('../../assets/Encinas.png') },
+  { id: 21, nombre: 'Valencia', posicion: 'Delantero', foto: require('../../assets/delaFuente.png') },
+  { id: 22, nombre: 'Juanele', posicion: 'Delantero', foto: require('../../assets/Juanele.jpeg') },
 ];
+
+type Props = {
+  navigation: MiembrosScreenNavigationProp;
+};
+
 
 // Renderiza cada tarjeta de jugador
 const renderItem = ({ item }: { item: Player }) => (
@@ -45,36 +52,62 @@ const renderItem = ({ item }: { item: Player }) => (
   </View>
 );
 
-const MiembrosScreen = () => {
+const MiembrosScreen: React.FC<Props> = ({ navigation }) => {
   return (
-    <LinearGradient colors={[colors.primary, colors.secondary]} style={styles.container}>
-      <Text style={styles.title}>Sporting Maderasa Bar Juanjo 2024/25</Text>
+    <View style={styles.container}>
+      {/* Agregar barra superior con iconos */}
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={30} color={colors.primary} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Plantilla</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Icon name="home" size={30} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         data={players} // La lista de jugadores
         renderItem={renderItem} // El componente que se renderiza
         keyExtractor={(item) => item.id.toString()} // Clave única para cada elemento
         numColumns={2} // Establece dos columnas
+        contentContainerStyle={styles.flatListContainer}
       />
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: colors.white, // Fondo blanco
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 10,
+    backgroundColor: colors.white, // Fondo blanco para la barra superior
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: colors.primary, // Color azul para el título
     textAlign: 'center',
-    marginBottom: 20,
-    color: colors.white, // Usamos el color blanco para el texto
+  },
+  flatListContainer: {
+    paddingHorizontal: 10,
   },
   item: {
     flex: 1,
     margin: 10,
+    backgroundColor: colors.primary, // Fondo azul para las tarjetas
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
 });
 

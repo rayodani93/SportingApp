@@ -1,124 +1,95 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, useWindowDimensions, ActivityIndicator } from 'react-native';
-import axios from 'axios';
-import { parseDocument } from 'htmlparser2';
-import { findAll, getInnerHTML } from 'domutils';
-import { decode } from 'html-entities';
-import { Picker } from '@react-native-picker/picker'; // Importa Picker desde el nuevo paquete
-import { colors } from '../../types/theme'; // Importamos los colores
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { supabase } from '../../config/supabaseClient';
+import { colors } from '../../types/theme';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Importar íconos de FontAwesome
+import { GoleadoresScreenNavigationProp } from '../../types/navigation';
 
-interface TableData {
-  headers: string[];
-  rows: string[][];
+interface Jugador {
+  id: number;
+  nombre: string;
+  goles: number;
+  partidos_jugados: number;
 }
 
-// Función para limpiar y decodificar el HTML
-const cleanHTML = (html: string) => {
-  const text = html.replace(/<\/?[^>]+(>|$)/g, ""); // Eliminar etiquetas HTML
-  return decode(text.trim().replace(/\s+/g, ' ')); // Decodificar entidades HTML y eliminar espacios múltiples
+type Props = {
+  navigation: GoleadoresScreenNavigationProp;
 };
 
-const GoleadoresScreen = () => {
-  const [tableData, setTableData] = useState<TableData | null>(null);
+const GoleadoresScreen: React.FC<Props> = ({ navigation }) => {
+  const [goleadores, setGoleadores] = useState<Jugador[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [selectedJornada, setSelectedJornada] = useState(30); // Valor inicial para la jornada
-  const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
-  const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
 
   useEffect(() => {
-    const fetchClasificacion = async () => {
+    const fetchGoleadores = async () => {
       setIsLoading(true);
       setIsError(false);
 
       try {
-        // Realizar la petición de inicio de sesión
-        await axios.post('https://aranjuez.ffmadrid.es/nfg/NLogin?NUser=M7445&NPass=1010');
+        const { data, error } = await supabase
+          .from('jugadores')
+          .select('id, nombre, goles, partidos_jugados')
+          .order('goles', { ascending: false });
 
-        // Obtener la clasificación
-        const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CMP_Goleadores?cod_primaria=1000128&codcompeticion=1005401&codtemporada=19&codgrupo=1005402`,
-          {
-            withCredentials: true,
-          }
-        );
-
-        const html = response.data;
-
-        // Parsear HTML para extraer la tabla
-        const document = parseDocument(html);
-        console.log(document);
-        const tables = findAll(elem => elem.name === 'table', document.children);
-
-        console.log('Total tables found:', tables.length); // Verificar la cantidad de tablas
-
-        if (tables.length > 0) { // Asegúrate de que hay al menos una tabla
-          const table = tables[4]; // Cambia este índice si es necesario
-          const headers = ['Jugador', 'Equipo', 'Grupo', 'PJ', 'G', 'GP'];
-          const rows = findAll(elem => elem.name === 'tr', table.children);
-
-          // Extraer datos de las filas
-          const rowData = rows.slice(1).map((row, index) => {
-            index--;
-            const cells = findAll(elem => elem.name === 'td', row.children);
-            const rowCells = cells.map(cell => cleanHTML(getInnerHTML(cell)));
-
-            // Filtra las columnas: queremos 8 columnas a partir de la tercera
-            const filteredCells = rowCells.slice(0, 11);
-            if (filteredCells.length > 0) {
-              return [...filteredCells]; // Añadir la posición como primer elemento
-            }
-            return null; // Si la fila está vacía, devolver null
-          }).filter(row => row !== null); // Filtrar filas nulas
-
-          setTableData({
-            headers: headers,
-            rows: rowData, // Mostrar todas las filas
-          });
-        } else {
-          console.error('No se encontraron suficientes tablas en el documento.');
+        if (error) {
+          throw new Error(error.message);
         }
+
+        setGoleadores(data || []);
       } catch (error) {
-        console.error('Error fetching clasificacion:', error);
+        console.error('Error fetching goleadores:', error);
         setIsError(true);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchClasificacion();
-  }, [selectedJornada]); // Añadir selectedJornada como dependencia
+    fetchGoleadores();
+  }, []);
 
-  // Filtra las columnas según la orientación
-  const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 5) : tableData?.headers;
-  const filteredRows = isPortrait ? tableData?.rows.map(row => row.slice(0, 5)) : tableData?.rows;
+  const calcularPromedio = (goles: number, partidos_jugados: number) => {
+    if (partidos_jugados === 0) return 0;
+    return (goles / partidos_jugados).toFixed(2);
+  };
 
   return (
     <View style={styles.container}>
+      {/* Barra de navegación con la flecha y el ícono de casita */}
+      <View style={styles.navBar}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={30} color={colors.primary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('Home')}>
+          <Icon name="home" size={30} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Botón para ir a la pantalla de Goleadores General */}
+      <TouchableOpacity
+        style={styles.generalButton}
+        onPress={() => navigation.navigate('GoleadoresGeneral')}
+      >
+        <Text style={styles.generalButtonText}>General</Text>
+      </TouchableOpacity>
+
       {isLoading ? (
         <ActivityIndicator size="large" color={colors.primary} />
       ) : isError ? (
         <Text style={styles.errorText}>Error al cargar los datos.</Text>
-      ) : tableData ? (
+      ) : goleadores.length > 0 ? (
         <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
           <View style={styles.headerRow}>
-            {filteredHeaders?.map((header, index) => (
-              <View key={index} style={[styles.headerCell, index === 1 ? styles.secondColumn : styles.otherColumn]}>
-                <Text style={styles.headerText}>{header}</Text>
-              </View>
-            ))}
+            <Text style={styles.headerText}>Jugador</Text>
+            <Text style={styles.headerText}>Goles</Text>
+            <Text style={styles.headerText}>Promedio</Text>
           </View>
-          {filteredRows?.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-              {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={[
-                  styles.cell,
-                  rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow,
-                  cellIndex === 1 ? styles.secondColumn : styles.firstColumn
-                ]}>
-                  <Text style={styles.cellText}>{cell}</Text>
-                </View>
-              ))}
+          {goleadores.map((jugador) => (
+            <View key={jugador.id} style={styles.row}>
+              <Text style={styles.cellText}>{jugador.nombre}</Text>
+              <Text style={styles.cellText}>{jugador.goles}</Text>
+              <Text style={styles.cellText}>{calcularPromedio(jugador.goles, jugador.partidos_jugados)}</Text>
             </View>
           ))}
         </ScrollView>
@@ -133,18 +104,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f8f9fa', // Fondo claro
+    backgroundColor: '#f8f9fa',
   },
-  pickerContainer: {
-    marginBottom: 20,
-    backgroundColor: '#ffffff',
+  navBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  iconButton: {
+    marginRight: 15, // Espaciado entre la flecha y la casita
+  },
+  generalButton: {
+    backgroundColor: colors.primary,
+    padding: 10,
     borderRadius: 5,
-    borderColor: '#ced4da',
-    borderWidth: 1,
+    alignItems: 'center',
+    marginBottom: 15,
   },
-  picker: {
-    height: 50,
-    width: '100%',
+  generalButtonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   scrollContainer: {
     flex: 1,
@@ -154,56 +134,38 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    backgroundColor: colors.primary, // Color de fondo del encabezado
+    backgroundColor: colors.primary,
     paddingVertical: 10,
     borderRadius: 5,
-  },
-  headerCell: {
-    flex: 1,
-    padding: 5,
-    alignItems: 'center',
-  },
-  firstColumn: {
-    flex: 3, // Ajustar el tamaño al contenido
-  },
-  secondColumn: {
-    flex: 3, // Ajustar el tamaño al contenido
-  },
-  otherColumn: {
-    flex: 3, // Tomar el espacio restante
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   headerText: {
-    color: '#ffffff', // Texto blanco
+    color: '#ffffff',
     fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center',
   },
   row: {
     flexDirection: 'row',
     marginVertical: 5,
     borderRadius: 5,
-  },
-  cell: {
-    flex: 1,
+    backgroundColor: '#ffffff',
     padding: 10,
-    borderWidth: 1,
-    borderColor: '#dee2e6', // Bordes suaves
-    alignItems: 'center',
-  },
-  evenRow: {
-    backgroundColor: '#ffffff', // Color de fondo para filas pares
-  },
-  oddRow: {
-    backgroundColor: '#f1f3f5', // Color de fondo para filas impares
+    justifyContent: 'space-between',
   },
   cellText: {
-    color: '#212529', // Texto oscuro
+    color: '#212529',
+    flex: 1,
+    textAlign: 'center',
   },
   errorText: {
-    color: '#dc3545', // Texto rojo para errores
+    color: '#dc3545',
     textAlign: 'center',
     marginVertical: 20,
   },
   noDataText: {
-    color: '#6c757d', // Texto gris para cuando no hay datos
+    color: '#6c757d',
     textAlign: 'center',
     marginVertical: 20,
   },

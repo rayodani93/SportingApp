@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, Text, View } from 'react-native';
+import { colors } from '../../../types/theme'; // Ruta corregida
+
 
 type Props = {
   player: {
@@ -27,7 +29,7 @@ const PlayerCard: React.FC<Props> = ({ player, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.primary, // Fondo azul
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -50,11 +52,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: colors.white, // Texto blanco
     textAlign: 'center',
   },
   position: {
     fontSize: 16,
-    color: 'gray',
+    fontWeight: 'bold', // Texto en negrita
+    color: colors.white, // Texto blanco
     marginTop: 5,
     textAlign: 'center',
   },
