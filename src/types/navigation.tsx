@@ -9,6 +9,7 @@ export type RootStackParamList = {
   Noticias: undefined; 
   Clasificacion: undefined; 
   Goleadores: undefined; 
+  Calendario: undefined;
   GoleadoresGeneral: undefined; // Nueva pantalla de Goleadores General
   JugadorRegister: undefined; 
   AficionadoRegister: undefined; 
@@ -23,6 +24,11 @@ export type HomeScreenNavigationProp = StackNavigationProp<
 export type GoleadoresScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Goleadores'
+>;
+
+export type CalendarioScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Calendario'
 >;
 
 export type GoleadoresGeneralScreenNavigationProp = StackNavigationProp<

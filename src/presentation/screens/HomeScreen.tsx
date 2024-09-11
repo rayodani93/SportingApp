@@ -14,11 +14,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const menuOptions = [
     { label: 'Miembros', value: 'Miembros' },
     { label: 'Noticias', value: 'Noticias' },
+    { label: 'Calendario', value: 'Calendario' },
     { label: 'Clasificación', value: 'Clasificacion' },
     { label: 'Goleadores', value: 'Goleadores' },
   ];
 
-  const handleNavigation = (screen: 'Miembros' | 'Noticias' | 'Clasificacion' | 'Goleadores') => {
+  const handleNavigation = (screen: 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores') => {
     setMenuVisible(false);
     navigation.navigate(screen);
   };
@@ -89,7 +90,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               <TouchableOpacity
                 key={index}
                 style={styles.modalOption}
-                onPress={() => handleNavigation(option.value as 'Miembros' | 'Noticias' | 'Clasificacion' | 'Goleadores')}
+                onPress={() => handleNavigation(option.value as 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores')}
               >
                 <Text style={styles.modalText}>{option.label}</Text>
               </TouchableOpacity>

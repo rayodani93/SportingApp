@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './presentation/screens/HomeScreen';
 import MiembrosScreen from './presentation/screens/MiembrosScreen';
 import NoticiasScreen from './presentation/screens/NoticiasScreen';
+import CalendarioScreen from './presentation/screens/CalendarioScreen';
 import ClasificacionScreen from './presentation/screens/ClasificacionScreen';
 import GoleadoresScreen from './presentation/screens/GoleadoresScreen';
 import LoginScreen from './presentation/screens/LoginScreen';
@@ -27,6 +28,7 @@ const App = () => {
         <Stack.Screen name="Miembros" component={MiembrosScreen}options={{ headerShown: false }} />
         <Stack.Screen name="Noticias" component={NoticiasScreen}options={{ headerShown: false }} />
         <Stack.Screen name="Clasificacion" component={ClasificacionScreen} options={{ title: 'Clasificación' }}/>
+        <Stack.Screen name="Calendario" component={CalendarioScreen} options={{ title: 'Calendario' }}/>
         <Stack.Screen name="Goleadores" component={GoleadoresScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen}options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }}/>
