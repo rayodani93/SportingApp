@@ -35,14 +35,14 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.logoButton}>
-          <Image 
-            source={require('../../assets/logo_adidas.png')} 
+          <Image
+            source={require('../../assets/logo_adidas.png')}
             style={styles.logoIcon}
           />
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.loginButton} 
+          style={styles.loginButton}
           activeOpacity={0.7}
           onPress={() => navigation.navigate('Login')}
         >
@@ -51,24 +51,20 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       </View>
 
       {/* Imágenes en el centro */}
-      <View style={styles.imageContainer}>
-        <Image 
-          source={require('../../assets/PortadaJuanjo.jpeg')} 
-          style={styles.estefamImage}
-        />
-        <Image 
-          source={require('../../assets/Estefam1.jpeg')} 
+      <View style={styles.centeredContent}>
+        <Image
+          source={require('../../assets/PortadaJuanjo.jpeg')}
           style={styles.estefamImage}
         />
       </View>
 
       <View style={styles.sponsorsContainer}>
-        <Image 
-          source={require('../../assets/logo_maderasa.png')} 
+        <Image
+          source={require('../../assets/logo_maderasa.png')}
           style={styles.logoMaderasa}
         />
-        <Image 
-          source={require('../../assets/logo_maderasa.png')} 
+        <Image
+          source={require('../../assets/logo_maderasa.png')}
           style={styles.logoMaderasa}
         />
       </View>
@@ -107,58 +103,43 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
+    flex: 1,
     justifyContent: 'space-between',
     backgroundColor: colors.white,
-    height: '100%'
   },
   containerNav: {
-    display: 'flex',
-    justifyContent: 'space-between',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 5,
+    padding: 10,
     backgroundColor: colors.white,
-    flex: 1.2
   },
-  imageContainer: {
-    marginTop: 20,
-    alignItems: 'center',
+  centeredContent: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   estefamImage: {
-    display: 'flex',
     width: 250,
     height: 250,
     borderRadius: 125,
     resizeMode: 'cover',
-    marginBottom: 20,
   },
   sponsorsContainer: {
-    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginHorizontal: 25,
-    marginTop: 30,
+    marginBottom: 30,
   },
   menuButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginLeft: 8
+    marginLeft: 8,
   },
   logoButton: {
-    display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'center',
   },
   loginButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginRight: 8
+    marginRight: 8,
   },
   logoIcon: {
     width: 170,
@@ -167,7 +148,7 @@ const styles = StyleSheet.create({
   },
   logoMaderasa: {
     width: 150,
-    height: 50
+    height: 50,
   },
   fullScreenMenu: {
     flex: 1,
