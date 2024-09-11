@@ -18,7 +18,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }} // Ocultar el encabezado para la pantalla de inicio
+        />
         <Stack.Screen name="Miembros" component={MiembrosScreen} />
         <Stack.Screen name="Noticias" component={NoticiasScreen} />
         <Stack.Screen name="Clasificacion" component={ClasificacionScreen} />
