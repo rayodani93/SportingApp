@@ -50,30 +50,27 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-        {/* Imagen agregada en el medio */}
-      <View style={styles.sliderContainer}>
-          <Image 
-              source={require('../../assets/image1.png')} 
-              style={styles.sliderImage}
-          />
+      {/* Imágenes en el centro */}
+      <View style={styles.imageContainer}>
+        <Image 
+          source={require('../../assets/PortadaJuanjo.jpeg')} 
+          style={styles.estefamImage}
+        />
+        <Image 
+          source={require('../../assets/Estefam1.jpeg')} 
+          style={styles.estefamImage}
+        />
       </View>
-      <View style={styles.bodyContainer}>
-        <View style={styles.newsContainer}>
-          <Image 
-              source={require('../../assets/Estefam1.jpeg')} 
-              style={styles.estefamImage}
-          />
-        </View>
-        <View style={styles.sponsorsContainer}>
-          <Image 
-                source={require('../../assets/logo_maderasa.png')} 
-                style={styles.logoMaderasa}
-          />
-          <Image 
-                source={require('../../assets/logo_maderasa.png')} 
-                style={styles.logoMaderasa}
-          />
-        </View>
+
+      <View style={styles.sponsorsContainer}>
+        <Image 
+          source={require('../../assets/logo_maderasa.png')} 
+          style={styles.logoMaderasa}
+        />
+        <Image 
+          source={require('../../assets/logo_maderasa.png')} 
+          style={styles.logoMaderasa}
+        />
       </View>
 
       <Modal
@@ -125,31 +122,26 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1.2
   },
-  sliderContainer: {
-    display: 'flex',
-    flexDirection: 'row',
+  imageContainer: {
+    marginTop: 20,
+    alignItems: 'center',
     justifyContent: 'center',
-    flex: 3.8
   },
-  bodyContainer: {
+  estefamImage: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    flex: 7,
-    padding: 30
-
-  },
-  newsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    width: 250,
+    height: 250,
+    borderRadius: 125,
+    resizeMode: 'cover',
+    marginBottom: 20,
   },
   sponsorsContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 25
+    marginHorizontal: 25,
+    marginTop: 30,
   },
   menuButton: {
     display: 'flex',
@@ -172,16 +164,6 @@ const styles = StyleSheet.create({
     width: 170,
     height: 70,
     resizeMode: 'contain',
-  },
-  estefamImage: {
-    display: 'flex',
-    width: 250,
-    height: 250,
-    borderRadius: 125
-  },
-  sliderImage: {
-    height: '100%',
-    resizeMode: 'contain'
   },
   logoMaderasa: {
     width: 150,

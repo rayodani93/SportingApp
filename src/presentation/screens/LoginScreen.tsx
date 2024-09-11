@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button, Title } from 'react-native-paper';
 import { LoginScreenNavigationProp } from '../../types/navigation';
-import LinearGradient from 'react-native-linear-gradient';
-import { commonStyles, colors } from '../../types/theme'; // Importamos los estilos y colores comunes
+import { colors } from '../../types/theme'; // Importamos los colores
 
 type Props = {
   navigation: LoginScreenNavigationProp;
@@ -14,7 +13,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   return (
-    <LinearGradient colors={[colors.primary, colors.secondary]} style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.formContainer}>
         <Title style={styles.title}>Iniciar Sesión</Title>
 
@@ -27,7 +26,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
           autoComplete="email"
-          theme={{ colors: { text: colors.white, primary: colors.white } }} // Colores del input
+          theme={{ colors: { text: colors.primary, primary: colors.primary } }} // Texto y bordes en azul
         />
 
         <TextInput
@@ -37,20 +36,20 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           onChangeText={setPassword}
           style={styles.input}
           secureTextEntry
-          theme={{ colors: { text: colors.white, primary: colors.white } }} // Colores del input
+          theme={{ colors: { text: colors.primary, primary: colors.primary } }} // Texto y bordes en azul
         />
 
-        {/* Botón de inicio de sesión con fondo blanco y texto en azul oscuro */}
+        {/* Botón de inicio de sesión con fondo blanco y texto en azul más fuerte */}
         <Button
           mode="contained"
           onPress={() => console.log('Iniciar sesión')}
-          style={[styles.loginButton, { backgroundColor: colors.white }]} // Fondo blanco
-          labelStyle={{ color: colors.primary }} // Texto en azul oscuro
+          style={styles.loginButton}
+          labelStyle={{ color: colors.strongBlue }} // Texto en azul más fuerte
         >
           Iniciar Sesión
         </Button>
 
-        {/* Botón de registro con texto blanco y negrita */}
+        {/* Botón de registro con texto en azul más fuerte */}
         <Button
           mode="text"
           onPress={() => navigation.navigate('Register')}
@@ -60,7 +59,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           ¿No tienes cuenta? Regístrate
         </Button>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -69,35 +68,40 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.white, // Fondo blanco
   },
   formContainer: {
     width: '90%',
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Fondo semitransparente para el formulario
-    borderRadius: 10,
+    backgroundColor: 'transparent', // Elimina cualquier cuadro de fondo innecesario
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    fontWeight: 'bold',
     textAlign: 'center',
-    color: colors.white,
+    color: colors.strongBlue, // Texto en azul
   },
   input: {
     marginBottom: 20,
-    backgroundColor: 'transparent', // Fondo transparente para los inputs
+    backgroundColor: colors.white, // Fondo blanco para el input
+    borderColor: colors.primary, // Borde azul para los inputs
   },
   loginButton: {
     marginTop: 10,
-    borderRadius: 30, // Ajuste adicional de estilo del botón
+    borderRadius: 30, // Borde redondeado
+    backgroundColor: colors.white, // Fondo blanco
+    borderColor: colors.strongBlue, // Borde azul fuerte
+    borderWidth: 2, // Ancho del borde
   },
   registerButton: {
     marginTop: 10,
     alignItems: 'center',
   },
   registerButtonText: {
-    color: colors.white,
-    fontWeight: 'bold', // Negrita
-    fontSize: 16, // Tamaño de fuente ajustado
+    color: colors.strongBlue, // Texto en azul más fuerte
+    fontWeight: 'bold',
+    fontSize: 16,
     textTransform: 'uppercase',
   },
 });

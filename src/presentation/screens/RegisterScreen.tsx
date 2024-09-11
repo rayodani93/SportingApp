@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Title, Subheading } from 'react-native-paper';
 import { RegisterScreenNavigationProp } from '../../types/navigation';
+import { colors } from '../../types/theme'; // Importamos los colores
 
 type Props = {
   navigation: RegisterScreenNavigationProp;
@@ -14,7 +15,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       <Title style={styles.title}>Únete a Sporting</Title>
       <Subheading style={styles.subtitle}>¿Cuál es tu rol?</Subheading>
 
-      {/* Botones para seleccionar el rol */}
+      {/* Botón para Jugador */}
       <TouchableOpacity 
         style={[styles.button, styles.playerButton]} 
         onPress={() => navigation.navigate('JugadorRegister')}
@@ -22,7 +23,14 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Jugador</Text>
       </TouchableOpacity>
+      
+      {/* Imagen de Jugador */}
+      <Image 
+        source={require('../../assets/Masen.jpeg')} 
+        style={styles.image}
+      />
 
+      {/* Botón para Aficionado */}
       <TouchableOpacity 
         style={[styles.button, styles.fanButton]} 
         onPress={() => navigation.navigate('AficionadoRegister')}
@@ -30,6 +38,12 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Aficionado</Text>
       </TouchableOpacity>
+
+      {/* Imagen de Aficionado */}
+      <Image 
+        source={require('../../assets/Fari.jpeg')} 
+        style={styles.image}
+      />
     </View>
   );
 };
@@ -39,19 +53,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.white, // Fondo blanco
     padding: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333',
+    color: colors.strongBlue, // Color azul fuerte
   },
   subtitle: {
     fontSize: 20,
     marginBottom: 40,
-    color: '#666',
+    color: colors.primary, // Color azul primario para consistencia
   },
   button: {
     paddingVertical: 15,
@@ -67,16 +81,22 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   playerButton: {
-    backgroundColor: '#4CAF50', // Color verde para el botón de Jugador
+    backgroundColor: colors.primary, // Azul para el botón de Jugador
   },
   fanButton: {
-    backgroundColor: '#2196F3', // Color azul para el botón de Aficionado
+    backgroundColor: colors.secondary, // Azul más claro para el botón de Aficionado
   },
   buttonText: {
-    color: '#fff',
+    color: colors.white, // Texto blanco
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'uppercase',
+  },
+  image: {
+    width: 180,
+    height: 120, // Ajustamos la altura para que la cabeza no se corte
+    marginBottom: 20,
+    resizeMode: 'contain', // Mostramos la imagen completa sin cortes
   },
 });
 
