@@ -25,13 +25,13 @@ const App = () => {
         />
         <Stack.Screen name="Miembros" component={MiembrosScreen} />
         <Stack.Screen name="Noticias" component={NoticiasScreen} />
-        <Stack.Screen name="Clasificacion" component={ClasificacionScreen} />
+        <Stack.Screen name="Clasificacion" component={ClasificacionScreen} options={{ title: 'Clasificación' }}/>
         <Stack.Screen name="Goleadores" component={GoleadoresScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="JugadorRegister" component={JugadorRegisterScreen} />
-        <Stack.Screen name="AficionadoRegister" component={AficionadoRegisterScreen} />
-        <Stack.Screen name="AddNoticia" component={AddNoticiaScreen} /> 
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Registro' }}/>
+        <Stack.Screen name="JugadorRegister" component={JugadorRegisterScreen} options={{ title: 'Registro como jugador' }}/>
+        <Stack.Screen name="AficionadoRegister" component={AficionadoRegisterScreen} options={{ title: 'Registro como aficionado' }}/>
+        <Stack.Screen name="AddNoticia" component={AddNoticiaScreen} options={{ title: 'Añadir noticia' }}/> 
       </Stack.Navigator>
     </NavigationContainer>
   );

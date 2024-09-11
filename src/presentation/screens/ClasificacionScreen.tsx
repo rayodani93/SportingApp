@@ -107,7 +107,7 @@ const ClasificacionScreen = () => {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={colors.primary} />
       ) : isError ? (
         <Text style={styles.errorText}>Error al cargar los datos.</Text>
       ) : tableData ? (
