@@ -1,10 +1,9 @@
 import React from 'react';
-import { StyleSheet, FlatList, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import PlayerCard from './components/PlayerCard';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../types/theme';
 import { MiembrosScreenNavigationProp } from '../../types/navigation'; // Asegúrate de que el tipo de navegación está correctamente definido
+import TopBar from './components/TopBar'; // Importa el componente TopBar
 
 // Define el tipo de un jugador
 type Player = {
@@ -44,7 +43,6 @@ type Props = {
   navigation: MiembrosScreenNavigationProp;
 };
 
-
 // Renderiza cada tarjeta de jugador
 const renderItem = ({ item }: { item: Player }) => (
   <View style={styles.item}>
@@ -55,16 +53,8 @@ const renderItem = ({ item }: { item: Player }) => (
 const MiembrosScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      {/* Agregar barra superior con iconos */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={30} color={colors.primary} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Plantilla</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Icon name="home" size={30} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
+      {/* Usar el componente TopBar */}
+      <TopBar title="Plantilla" />
 
       <FlatList
         data={players} // La lista de jugadores
@@ -81,19 +71,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white, // Fondo blanco
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: colors.white, // Fondo blanco para la barra superior
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.primary, // Color azul para el título
-    textAlign: 'center',
   },
   flatListContainer: {
     paddingHorizontal: 10,
