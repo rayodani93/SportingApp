@@ -29,7 +29,6 @@ const AficionadoRegisterScreen: React.FC<Props> = ({ navigation }) => {
     }
 
     try {
-      // 1. Inserta al aficionado en la tabla de seguidores
       const { error: insertError } = await supabase.from('seguidores').insert([
         {
           nombre,
@@ -40,7 +39,6 @@ const AficionadoRegisterScreen: React.FC<Props> = ({ navigation }) => {
 
       if (insertError) throw insertError;
 
-      // 2. Enviar correo de autenticación a través de Supabase Auth
       const { error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -57,11 +55,10 @@ const AficionadoRegisterScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Añadir el TopBar */}
       <TopBar title="Registro" />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image
-          source={require('../../assets/fondo_registro.jpg')} // Asegúrate de que la ruta es correcta
+          source={require('../../assets/fondo_registro.jpg')}
           style={styles.backgroundImage}
         />
         <View style={styles.overlay}>
@@ -120,11 +117,13 @@ const AficionadoRegisterScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    position: 'relative',
   },
   scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 20,
   },
   backgroundImage: {
     position: 'absolute',
@@ -135,13 +134,10 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
     width: '90%',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Fondo semitransparente
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: 10,
+    padding: 20,
   },
   title: {
     fontSize: 24,

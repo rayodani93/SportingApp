@@ -6,6 +6,7 @@ import { findAll, getInnerHTML } from 'domutils';
 import { decode } from 'html-entities';
 import { Picker } from '@react-native-picker/picker'; // Importa Picker desde el nuevo paquete
 import { colors } from '../../types/theme'; // Importamos los colores
+import TopBar from './components/TopBar'; // Importamos el TopBar
 
 interface TableData {
   headers: string[];
@@ -47,7 +48,6 @@ const GoleadoresGeneralScreen = () => {
 
         // Parsear HTML para extraer la tabla
         const document = parseDocument(html);
-        console.log(document);
         const tables = findAll(elem => elem.name === 'table', document.children);
 
         console.log('Total tables found:', tables.length); // Verificar la cantidad de tablas
@@ -63,17 +63,16 @@ const GoleadoresGeneralScreen = () => {
             const cells = findAll(elem => elem.name === 'td', row.children);
             const rowCells = cells.map(cell => cleanHTML(getInnerHTML(cell)));
 
-            // Filtra las columnas: queremos 8 columnas a partir de la tercera
             const filteredCells = rowCells.slice(0, 11);
             if (filteredCells.length > 0) {
-              return [...filteredCells]; // Añadir la posición como primer elemento
+              return [...filteredCells];
             }
-            return null; // Si la fila está vacía, devolver null
-          }).filter(row => row !== null); // Filtrar filas nulas
+            return null;
+          }).filter(row => row !== null);
 
           setTableData({
             headers: headers,
-            rows: rowData, // Mostrar todas las filas
+            rows: rowData,
           });
         } else {
           console.error('No se encontraron suficientes tablas en el documento.');
@@ -87,14 +86,14 @@ const GoleadoresGeneralScreen = () => {
     };
 
     fetchClasificacion();
-  }, [selectedJornada]); // Añadir selectedJornada como dependencia
+  }, [selectedJornada]);
 
-  // Filtra las columnas según la orientación
   const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 5) : tableData?.headers;
   const filteredRows = isPortrait ? tableData?.rows.map(row => row.slice(0, 5)) : tableData?.rows;
 
   return (
     <View style={styles.container}>
+      <TopBar title="General" />
       {isLoading ? (
         <ActivityIndicator size="large" color={colors.primary} />
       ) : isError ? (
@@ -109,15 +108,30 @@ const GoleadoresGeneralScreen = () => {
             ))}
           </View>
           {filteredRows?.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
+            <View key={rowIndex} style={[
+              styles.row,
+              rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow,
+              row[1].toLowerCase().includes('sporting') ? styles.highlightRow : undefined
+            ]}>
               {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={[
-                  styles.cell,
-                  rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow,
-                  cellIndex === 1 ? styles.secondColumn : styles.firstColumn
-                ]}>
-                  <Text style={styles.cellText}>{cell}</Text>
+                <View
+                  key={cellIndex}
+                  style={[
+                    styles.cell,
+                    cellIndex === 1 ? styles.secondColumn : styles.firstColumn,
+                    row[1].toLowerCase().includes('sporting') && cellIndex === 0 ? {} : {}
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.cellText,
+                      row[1].toLowerCase().includes('sporting') && cellIndex === 0 ? styles.boldText : null
+                    ]}
+                  >
+                    {cell}
+                  </Text>
                 </View>
+
               ))}
             </View>
           ))}
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f8f9fa', // Fondo claro
+    backgroundColor: '#f8f9fa',
   },
   pickerContainer: {
     marginBottom: 20,
@@ -154,7 +168,7 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    backgroundColor: colors.primary, // Color de fondo del encabezado
+    backgroundColor: colors.primary,
     paddingVertical: 10,
     borderRadius: 5,
   },
@@ -164,16 +178,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   firstColumn: {
-    flex: 3, // Ajustar el tamaño al contenido
+    flex: 3,
   },
   secondColumn: {
-    flex: 3, // Ajustar el tamaño al contenido
+    flex: 3,
   },
   otherColumn: {
-    flex: 3, // Tomar el espacio restante
+    flex: 3,
   },
   headerText: {
-    color: '#ffffff', // Texto blanco
+    color: '#ffffff',
     fontWeight: 'bold',
   },
   row: {
@@ -185,25 +199,31 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#dee2e6', // Bordes suaves
+    borderColor: '#dee2e6',
     alignItems: 'center',
   },
   evenRow: {
-    backgroundColor: '#ffffff', // Color de fondo para filas pares
+    backgroundColor: '#ffffff',
   },
   oddRow: {
-    backgroundColor: '#f1f3f5', // Color de fondo para filas impares
+    backgroundColor: '#f1f3f5',
+  },
+  highlightRow: {
+    backgroundColor: '#d4edda', // Color verde claro para resaltar
+  },
+  boldText: {
+    fontWeight: 'bold', // Negrita para el jugador del Sporting
   },
   cellText: {
-    color: '#212529', // Texto oscuro
+    color: '#212529',
   },
   errorText: {
-    color: '#dc3545', // Texto rojo para errores
+    color: '#dc3545',
     textAlign: 'center',
     marginVertical: 20,
   },
   noDataText: {
-    color: '#6c757d', // Texto gris para cuando no hay datos
+    color: '#6c757d',
     textAlign: 'center',
     marginVertical: 20,
   },

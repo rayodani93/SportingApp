@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { supabase } from '../../config/supabaseClient';
 import { colors } from '../../types/theme';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Importar íconos de FontAwesome
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 import { GoleadoresScreenNavigationProp } from '../../types/navigation';
+import TopBar from './components/TopBar'; // Importamos el TopBar
 
 interface Jugador {
   id: number;
@@ -55,16 +56,8 @@ const GoleadoresScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Barra de navegación con la flecha y el ícono de casita */}
-      <View style={styles.navBar}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={30} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('Home')}>
-          <Icon name="home" size={30} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
+      {/* TopBar agregado */}
+      <TopBar title="Goleadores" />
 
       {/* Botón para ir a la pantalla de Goleadores General */}
       <TouchableOpacity
@@ -105,14 +98,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: '#f8f9fa',
-  },
-  navBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  iconButton: {
-    marginRight: 15, // Espaciado entre la flecha y la casita
   },
   generalButton: {
     backgroundColor: colors.primary,

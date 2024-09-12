@@ -12,7 +12,6 @@ type Props = {
 };
 
 const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
-  // Estado para los campos del formulario
   const [nombre, setNombre] = useState('');
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [dni, setDni] = useState('');
@@ -23,13 +22,11 @@ const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [codigoConfirmacion, setCodigoConfirmacion] = useState('');
 
   const handleRegister = async () => {
-    // Validaciones de los campos
     if (!nombre || !nombreUsuario || !dni || !correo || !password || !repetirPassword || !codigoConfirmacion) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
-    // Validación del DNI
     const dniPattern = /^[0-9]{8}[A-Za-z]$/;
     if (!dniPattern.test(dni)) {
       Alert.alert('Error', 'El DNI no es válido. Debe tener 8 dígitos seguidos de una letra.');
@@ -76,12 +73,16 @@ const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Añadir el TopBar */}
       <TopBar title="Registro" />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Image source={require('../../assets/fondo_registro.jpg')} style={styles.backgroundImage} />
+        <Image
+          source={require('../../assets/fondo_registro.jpg')}
+          style={styles.backgroundImage}
+        />
         <View style={styles.overlay}>
-          <Title style={styles.title}>Jugador</Title>
+
+          <Title style={styles.title}>JUGADOR</Title>
+
           <TextInput
             label="Nombre Completo"
             value={nombre}
@@ -159,10 +160,13 @@ const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
   },
   scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 20,
   },
   backgroundImage: {
     position: 'absolute',
@@ -173,13 +177,10 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
     width: '90%',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: 10,
+    padding: 20,
   },
   title: {
     fontSize: 24,
@@ -193,15 +194,15 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.white,
   },
-  picker: {
-    width: '100%',
-    marginBottom: 20,
-    backgroundColor: colors.white,
-  },
   button: {
     backgroundColor: colors.primary,
     width: '100%',
     paddingVertical: 10,
+  },
+  picker: {
+    width: '100%',
+    marginBottom: 20,
+    backgroundColor: colors.white,
   },
 });
 
