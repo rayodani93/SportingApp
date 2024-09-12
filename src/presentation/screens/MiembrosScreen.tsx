@@ -27,7 +27,7 @@ const players: Player[] = [
   { id: 10, nombre: 'Víctor', posicion: 'Defensa', foto: require('../../assets/Victor.jpeg') },
   { id: 11, nombre: 'Sánchez', posicion: 'Centrocampista', foto: require('../../assets/Tinkita.png') },
   { id: 12, nombre: 'Nacho', posicion: 'Centrocampista', foto: require('../../assets/Masen.jpeg') },
-  { id: 13, nombre: 'Albert', posicion: 'Centrocampista', foto: require('../../assets/Alber.jpeg') },
+  { id: 13, nombre: 'Albert', posicion: 'Centrocampista', foto: require('../../assets/Albert.jpeg') },
   { id: 14, nombre: 'de la Fuente', posicion: 'Centrocampista', foto: require('../../assets/delaFuente.png') },
   { id: 15, nombre: 'Estefania', posicion: 'Centrocampista', foto: require('../../assets/EstefanAlergia.jpeg') },
   { id: 16, nombre: 'Bellot', posicion: 'Centrocampista', foto: require('../../assets/Bellot.jpeg') },

@@ -6,25 +6,25 @@ import { findAll, getInnerHTML } from 'domutils';
 import { decode } from 'html-entities';
 import { Picker } from '@react-native-picker/picker'; // Importa Picker desde el nuevo paquete
 import { colors } from '../../types/theme'; // Importamos los colores
+import TopBar from './components/TopBar'; // Importa el TopBar
 
 interface TableData {
   headers: string[];
   rows: string[][];
 }
 
-// Función para limpiar y decodificar el HTML
 const cleanHTML = (html: string) => {
-  const text = html.replace(/<\/?[^>]+(>|$)/g, ""); // Eliminar etiquetas HTML
-  return decode(text.trim().replace(/\s+/g, ' ')); // Decodificar entidades HTML y eliminar espacios múltiples
+  const text = html.replace(/<\/?[^>]+(>|$)/g, ""); 
+  return decode(text.trim().replace(/\s+/g, ' ')); 
 };
 
 const ClasificacionScreen = () => {
   const [tableData, setTableData] = useState<TableData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [selectedJornada, setSelectedJornada] = useState(30); // Valor inicial para la jornada
-  const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
-  const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
+  const [selectedJornada, setSelectedJornada] = useState(30); 
+  const { width } = useWindowDimensions(); 
+  const isPortrait = width < 600;
 
   useEffect(() => {
     const fetchClasificacion = async () => {
@@ -32,47 +32,37 @@ const ClasificacionScreen = () => {
       setIsError(false);
 
       try {
-        // Realizar la petición de inicio de sesión
         await axios.post('https://aranjuez.ffmadrid.es/nfg/NLogin?NUser=M7445&NPass=1010');
 
-        // Obtener la clasificación
         const response = await axios.get(
           `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=${selectedJornada}&codcompeticion=1005401&codgrupo=1005402&cod_agrupacion=1`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
 
         const html = response.data;
-
-        // Parsear HTML para extraer la tabla
         const document = parseDocument(html);
         const tables = findAll(elem => elem.name === 'table', document.children);
 
-        console.log('Total tables found:', tables.length); // Verificar la cantidad de tablas
-
-        if (tables.length > 0) { // Asegúrate de que hay al menos una tabla
-          const table = tables[9]; // Cambia este índice si es necesario
+        if (tables.length > 0) {
+          const table = tables[9]; 
           const headers = ['Pos.', 'Equipo', 'Puntos', 'J', 'G', 'E', 'P', 'F', 'C', 'Últimos'];
           const rows = findAll(elem => elem.name === 'tr', table.children);
 
-          // Extraer datos de las filas
           const rowData = rows.slice(1).map((row, index) => {
             index--;
             const cells = findAll(elem => elem.name === 'td', row.children);
             const rowCells = cells.map(cell => cleanHTML(getInnerHTML(cell)));
 
-            // Filtra las columnas: queremos 8 columnas a partir de la tercera
             const filteredCells = rowCells.slice(2, 11);
             if (filteredCells.length > 0) {
-              return [String(index + 1), ...filteredCells]; // Añadir la posición como primer elemento
+              return [String(index + 1), ...filteredCells];
             }
-            return null; // Si la fila está vacía, devolver null
-          }).filter(row => row !== null); // Filtrar filas nulas
+            return null; 
+          }).filter(row => row !== null); 
 
           setTableData({
             headers: headers,
-            rows: rowData, // Mostrar todas las filas
+            rows: rowData, 
           });
         } else {
           console.error('No se encontraron suficientes tablas en el documento.');
@@ -86,14 +76,16 @@ const ClasificacionScreen = () => {
     };
 
     fetchClasificacion();
-  }, [selectedJornada]); // Añadir selectedJornada como dependencia
+  }, [selectedJornada]);
 
-  // Filtra las columnas según la orientación
   const filteredHeaders = isPortrait ? tableData?.headers.slice(0, 4) : tableData?.headers;
   const filteredRows = isPortrait ? tableData?.rows.map(row => row.slice(0, 4)) : tableData?.rows;
 
   return (
     <View style={styles.container}>
+      {/* Añadir TopBar */}
+      <TopBar title="Clasificación" />
+
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedJornada}
@@ -101,7 +93,7 @@ const ClasificacionScreen = () => {
           onValueChange={(itemValue) => setSelectedJornada(itemValue)}
         >
           {[...Array(30).keys()].map(i => (
-            <Picker.Item key={i+1} label={`Jornada ${i+1}`} value={i+1} />
+            <Picker.Item key={i + 1} label={`Jornada ${i + 1}`} value={i + 1} />
           ))}
         </Picker>
       </View>
@@ -144,7 +136,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f8f9fa', // Fondo claro
+    backgroundColor: '#f8f9fa',
   },
   pickerContainer: {
     marginBottom: 20,
@@ -165,7 +157,7 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    backgroundColor: colors.primary, // Color de fondo del encabezado
+    backgroundColor: colors.primary,
     paddingVertical: 10,
     borderRadius: 5,
   },
@@ -175,16 +167,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   firstColumn: {
-    flex: 1, // Ajustar el tamaño al contenido
+    flex: 1,
   },
   secondColumn: {
-    flex: 4, // Ajustar el tamaño al contenido
+    flex: 4,
   },
   otherColumn: {
-    flex: 1, // Tomar el espacio restante
+    flex: 1,
   },
   headerText: {
-    color: '#ffffff', // Texto blanco
+    color: '#ffffff',
     fontWeight: 'bold',
   },
   row: {
@@ -196,25 +188,25 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#dee2e6', // Bordes suaves
+    borderColor: '#dee2e6',
     alignItems: 'center',
   },
   evenRow: {
-    backgroundColor: '#ffffff', // Color de fondo para filas pares
+    backgroundColor: '#ffffff',
   },
   oddRow: {
-    backgroundColor: '#f1f3f5', // Color de fondo para filas impares
+    backgroundColor: '#f1f3f5',
   },
   cellText: {
-    color: '#212529', // Texto oscuro
+    color: '#212529',
   },
   errorText: {
-    color: '#dc3545', // Texto rojo para errores
+    color: '#dc3545',
     textAlign: 'center',
     marginVertical: 20,
   },
   noDataText: {
-    color: '#6c757d', // Texto gris para cuando no hay datos
+    color: '#6c757d',
     textAlign: 'center',
     marginVertical: 20,
   },

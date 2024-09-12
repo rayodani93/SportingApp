@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { supabase } from '../../config/supabaseClient';
 import { colors, commonStyles } from '../../types/theme';
-import TopBar from './components/TopBar'; // Importa el componente TopBar
+import TopBar from './components/TopBar';
 import { NoticiasScreenNavigationProp } from '../../types/navigation';
 
 type Props = {
@@ -41,13 +41,13 @@ const NoticiasScreen: React.FC<Props> = ({ navigation }) => {
   }, []);
 
   const renderItem = ({ item }: { item: News }) => (
-    <View style={styles.newsItem}>
+    <TouchableOpacity
+      style={styles.newsItem}
+      onPress={() => navigation.navigate('NewsDetail', { id: item.id })} // Navegación a la noticia específica
+    >
       <Image source={{ uri: item.imagen }} style={styles.newsImage} />
-      <View style={styles.newsContent}>
-        <Text style={styles.newsTitle}>{item.titulo}</Text>
-        <Text style={styles.newsDescription}>{item.contenido.substring(0, 100)}...</Text>
-      </View>
-    </View>
+      <Text style={styles.newsTitle}>{item.titulo}</Text>
+    </TouchableOpacity>
   );
 
   if (loading) {
@@ -63,14 +63,6 @@ const NoticiasScreen: React.FC<Props> = ({ navigation }) => {
       {/* Barra superior con el título y los iconos */}
       <TopBar title="Noticias" />
 
-      {/* Botón Añadir Noticia */}
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate('AddNoticia')}
-      >
-        <Text style={styles.addButtonText}>Añadir Noticia</Text>
-      </TouchableOpacity>
-
       <FlatList
         data={news}
         renderItem={renderItem}
@@ -85,55 +77,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingTop: 60, // Ajuste para dejar espacio para la TopBar
-    alignItems: 'center',
   },
   listContent: {
     paddingHorizontal: 10,
   },
   newsItem: {
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 3,
-    flexDirection: 'row',
     marginBottom: 20,
-    padding: 10,
   },
   newsImage: {
-    width: 100,
-    height: 100,
+    width: '100%', // Ancho completo de la pantalla
+    height: 200, // Altura ajustable
     borderRadius: 10,
-    marginRight: 10,
-  },
-  newsContent: {
-    flex: 1,
-    justifyContent: 'center',
   },
   newsTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: colors.primary,
-  },
-  newsDescription: {
-    fontSize: 14,
-    color: colors.secondary,
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 20,
-    flexDirection: 'row', // Para que el texto y el icono estén en la misma línea
-  },
-  addButtonText: {
-    color: colors.white,
-    fontSize: 16,
-    marginLeft: 10,
+    marginTop: 10,
+    textAlign: 'center',
   },
 });
 

@@ -4,28 +4,29 @@ import axios from 'axios';
 import { parseDocument } from 'htmlparser2';
 import { findAll, getInnerHTML, hasAttrib, getAttributeValue } from 'domutils';
 import { decode } from 'html-entities';
-import { Picker } from '@react-native-picker/picker'; // Importa Picker desde el nuevo paquete
-import { colors } from '../../types/theme'; // Importamos los colores
+import { Picker } from '@react-native-picker/picker'; 
+import { colors } from '../../types/theme'; 
+import TopBar from './components/TopBar'; // Importa el TopBar
 
 interface TableData {
   headers: string[];
   rows: string[][];
 }
 
-// Función para limpiar y decodificar el HTML, omitiendo comentarios
+// Función para limpiar y decodificar el HTML
 const cleanHTML = (html: string) => {
-  const withoutComments = html.replace(/<!--.*?-->/gs, ""); // Eliminar comentarios
-  const text = withoutComments.replace(/<\/?[^>]+(>|$)/g, ""); // Eliminar etiquetas HTML
-  return decode(text.trim().replace(/\s+/g, ' ')); // Decodificar entidades HTML y eliminar espacios múltiples
+  const withoutComments = html.replace(/<!--.*?-->/gs, ""); 
+  const text = withoutComments.replace(/<\/?[^>]+(>|$)/g, ""); 
+  return decode(text.trim().replace(/\s+/g, ' ')); 
 };
 
 const CalendarioScreen: React.FC = () => {
   const [divContent, setDivContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [selectedJornada, setSelectedJornada] = useState(30); // Valor inicial para la jornada
-  const { width } = useWindowDimensions(); // Obtiene las dimensiones de la ventana
-  const isPortrait = width < 600; // Define un umbral para considerar orientación vertical
+  const [selectedJornada, setSelectedJornada] = useState(30); 
+  const { width } = useWindowDimensions(); 
+  const isPortrait = width < 600; 
 
   useEffect(() => {
     const fetchCalendario = async () => {
@@ -33,30 +34,21 @@ const CalendarioScreen: React.FC = () => {
       setIsError(false);
 
       try {
-        // Realizar la petición de inicio de sesión
         await axios.post('https://aranjuez.ffmadrid.es/nfg/NLogin?NUser=M7445&NPass=1010');
 
-        // Obtener el calendario
         const response = await axios.get(
           `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodCompeticion=1005401&CodGrupo=1005402&CodTemporada=19&CodJornada=${selectedJornada}&cod_agrupacion=1&Sch_Tipo_Juego=1`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
 
         const html = response.data;
-
-        // Parsear HTML para extraer el div con clase "row"
         const document = parseDocument(html);
         const rows = findAll(elem => elem.name === 'div' && hasAttrib(elem, 'class') && getAttributeValue(elem, 'class') === 'row', document.children);
 
-        console.log('Total divs with class "row" found:', rows.length); // Verificar la cantidad de divs
-
-        if (rows.length > 0) { // Asegúrate de que hay al menos un div con clase "row"
-          const targetDiv = rows[0]; // Extrae el primer div con clase "row"
+        if (rows.length > 0) {
+          const targetDiv = rows[0]; 
           const divInnerHTML = getInnerHTML(targetDiv);
           const cleanedDivContent = cleanHTML(divInnerHTML);
-          console.log(cleanedDivContent);
           setDivContent(cleanedDivContent);
         } else {
           console.error('No se encontraron divs con la clase "row".');
@@ -70,10 +62,13 @@ const CalendarioScreen: React.FC = () => {
     };
 
     fetchCalendario();
-  }, [selectedJornada]); // Añadir selectedJornada como dependencia
+  }, [selectedJornada]); 
 
   return (
     <View style={styles.container}>
+      {/* Añadir TopBar */}
+      <TopBar title="Calendario" />
+
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedJornada}
@@ -81,7 +76,7 @@ const CalendarioScreen: React.FC = () => {
           onValueChange={(itemValue) => setSelectedJornada(itemValue)}
         >
           {[...Array(30).keys()].map(i => (
-            <Picker.Item key={i+1} label={`Jornada ${i+1}`} value={i+1} />
+            <Picker.Item key={i + 1} label={`Jornada ${i + 1}`} value={i + 1} />
           ))}
         </Picker>
       </View>
@@ -105,7 +100,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f8f9fa', // Fondo claro
+    backgroundColor: '#f8f9fa', 
   },
   pickerContainer: {
     marginBottom: 20,
@@ -125,12 +120,12 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   errorText: {
-    color: '#dc3545', // Texto rojo para errores
+    color: '#dc3545', 
     textAlign: 'center',
     marginVertical: 20,
   },
   noDataText: {
-    color: '#6c757d', // Texto gris para cuando no hay datos
+    color: '#6c757d',
     textAlign: 'center',
     marginVertical: 20,
   },

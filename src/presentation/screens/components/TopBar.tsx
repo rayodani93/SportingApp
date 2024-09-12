@@ -8,29 +8,46 @@ import { RootStackParamList } from '../../../types/navigation';
 import { colors } from '../../../types/theme';
 
 type Props = {
-  title: string; // Para que puedas cambiar el título en cada pantalla
+  title: string;
 };
 
-// Tipamos el hook useNavigation para las pantallas definidas en RootStackParamList
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 
 const TopBar: React.FC<Props> = ({ title }) => {
-  const navigation = useNavigation<NavigationProp>(); // Tipamos el hook de navegación
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <View style={styles.topBar}>
-      {/* Icono de flecha a la izquierda */}
-      <TouchableOpacity style={styles.iconLeft} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={30} color={colors.primary} />
-      </TouchableOpacity>
+      <View style={styles.leftIcons}>
+        
+        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Calendario')}>
+          <Icon name="calendar" size={30} color={colors.primary} />
+        </TouchableOpacity>
 
-      {/* Título centrado */}
+        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Goleadores')}>
+          <Icon name="soccer-ball-o" size={30} color={colors.primary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Miembros')}>
+          <Icon name="users" size={30} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
+
       <Text style={styles.title}>{title}</Text>
 
-      {/* Icono de home a la derecha */}
-      <TouchableOpacity style={styles.iconRight} onPress={() => navigation.navigate('Home')}>
-        <Icon name="home" size={30} color={colors.primary} />
-      </TouchableOpacity>
+      <View style={styles.rightIcons}>
+        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Clasificacion')}>
+          <Icon name="list" size={30} color={colors.primary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Noticias')}>
+          <Icon name="newspaper-o" size={30} color={colors.primary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
+          <Icon name="home" size={30} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -38,18 +55,22 @@ const TopBar: React.FC<Props> = ({ title }) => {
 const styles = StyleSheet.create({
   topBar: {
     height: 50,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: colors.white,
-    position: 'relative',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
   },
-  iconLeft: {
-    position: 'absolute',
-    left: 10, // Mantén el icono pegado a la izquierda
+  leftIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  iconRight: {
-    position: 'absolute',
-    right: 10, // Mantén el icono pegado a la derecha
+  rightIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginHorizontal: 5,
   },
   title: {
     fontSize: 24,

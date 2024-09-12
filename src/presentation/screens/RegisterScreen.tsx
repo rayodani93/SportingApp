@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Title, Subheading } from 'react-native-paper';
 import { RegisterScreenNavigationProp } from '../../types/navigation';
-import { colors } from '../../types/theme'; // Importamos los colores
+import { colors } from '../../types/theme';
+import TopBar from './components/TopBar'; 
 
 type Props = {
   navigation: RegisterScreenNavigationProp;
@@ -11,39 +12,47 @@ type Props = {
 const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      {/* Título */}
-      <Title style={styles.title}>Únete a Sporting</Title>
-      <Subheading style={styles.subtitle}>¿Cuál es tu rol?</Subheading>
+      {/* Imagen de fondo */}
+      <Image source={require('../../assets/Maradona.jpeg')} style={styles.backgroundImage} />
 
-      {/* Botón para Jugador */}
-      <TouchableOpacity 
-        style={[styles.button, styles.playerButton]} 
-        onPress={() => navigation.navigate('JugadorRegister')}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.buttonText}>Jugador</Text>
-      </TouchableOpacity>
-      
-      {/* Imagen de Jugador */}
-      <Image 
-        source={require('../../assets/Masen.jpeg')} 
-        style={styles.image}
-      />
+      {/* Añadir TopBar fuera del overlay */}
+      <TopBar title="Registro" />
 
-      {/* Botón para Aficionado */}
-      <TouchableOpacity 
-        style={[styles.button, styles.fanButton]} 
-        onPress={() => navigation.navigate('AficionadoRegister')}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.buttonText}>Aficionado</Text>
-      </TouchableOpacity>
+      {/* Overlay semitransparente */}
+      <View style={styles.overlay}>
+        {/* Título */}
+        <Title style={styles.title}>Únete a Sporting</Title>
 
-      {/* Imagen de Aficionado */}
-      <Image 
-        source={require('../../assets/Fari.jpeg')} 
-        style={styles.image}
-      />
+        {/* Botón para Jugador */}
+        <TouchableOpacity 
+          style={[styles.button, styles.playerButton]} 
+          onPress={() => navigation.navigate('JugadorRegister')}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.buttonText}>Jugador</Text>
+        </TouchableOpacity>
+        
+        {/* Imagen de Jugador */}
+        <Image 
+          source={require('../../assets/Masen.jpeg')} 
+          style={styles.image}
+        />
+
+        {/* Botón para Aficionado */}
+        <TouchableOpacity 
+          style={[styles.button, styles.fanButton]} 
+          onPress={() => navigation.navigate('AficionadoRegister')}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.buttonText}>Aficionado</Text>
+        </TouchableOpacity>
+
+        {/* Imagen de Aficionado */}
+        <Image 
+          source={require('../../assets/Fari.jpeg')} 
+          style={styles.image}
+        />
+      </View>
     </View>
   );
 };
@@ -51,25 +60,33 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  overlay: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white, // Fondo blanco
     padding: 20,
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 10,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: colors.strongBlue, // Color azul fuerte
-  },
-  subtitle: {
-    fontSize: 20,
-    marginBottom: 40,
-    color: colors.primary, // Color azul primario para consistencia
+    color: colors.strongBlue,
   },
   button: {
     paddingVertical: 15,
-    paddingHorizontal: 30,
     borderRadius: 30,
     marginVertical: 10,
     width: '80%',
@@ -81,22 +98,23 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   playerButton: {
-    backgroundColor: colors.primary, // Azul para el botón de Jugador
+    backgroundColor: '#4CAF50', // Verde para Jugador
   },
   fanButton: {
-    backgroundColor: colors.secondary, // Azul más claro para el botón de Aficionado
+    backgroundColor: '#8BC34A', // Verde más claro para Aficionado
   },
   buttonText: {
-    color: colors.white, // Texto blanco
+    color: colors.white,
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
   image: {
     width: 180,
-    height: 120, // Ajustamos la altura para que la cabeza no se corte
+    height: 120,
     marginBottom: 20,
-    resizeMode: 'contain', // Mostramos la imagen completa sin cortes
+    resizeMode: 'contain',
+    alignSelf: 'center',
   },
 });
 

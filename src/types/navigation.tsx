@@ -5,15 +5,16 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Player: { playerId: number };
-  Miembros: undefined; 
-  Noticias: undefined; 
-  Clasificacion: undefined; 
-  Goleadores: undefined; 
+  Miembros: undefined;
+  Noticias: undefined;
+  Clasificacion: undefined;
+  Goleadores: undefined;
   Calendario: undefined;
-  GoleadoresGeneral: undefined; // Nueva pantalla de Goleadores General
-  JugadorRegister: undefined; 
-  AficionadoRegister: undefined; 
-  AddNoticia: undefined; 
+  GoleadoresGeneral: undefined;
+  JugadorRegister: undefined;
+  AficionadoRegister: undefined;
+  AddNoticia: undefined;
+  NewsDetail: { id: number }; // Pantalla para los detalles de la noticia
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -51,10 +52,16 @@ export type NoticiasScreenNavigationProp = StackNavigationProp<
   'Noticias'
 >;
 
+export type NewsDetailScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'NewsDetail'
+>;
+
 export type AddNoticiaScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'AddNoticia'
 >;
+
 export type MiembrosScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Miembros'

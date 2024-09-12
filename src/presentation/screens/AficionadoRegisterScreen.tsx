@@ -4,6 +4,7 @@ import { TextInput, Button, Title, HelperText } from 'react-native-paper';
 import { supabase } from '../../config/supabaseClient';
 import { RegisterScreenNavigationProp } from '../../types/navigation';
 import { colors } from '../../types/theme';
+import TopBar from './components/TopBar';
 
 type Props = {
   navigation: RegisterScreenNavigationProp;
@@ -55,66 +56,73 @@ const AficionadoRegisterScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Image
-        source={require('../../assets/fondo_registro.jpg')} // Asegúrate de que la ruta es correcta
-        style={styles.backgroundImage}
-      />
-      <View style={styles.overlay}>
-        <Title style={styles.title}>Registro de Aficionado</Title>
-        <TextInput
-          label="Nombre Completo"
-          value={nombre}
-          onChangeText={setNombre}
-          style={styles.input}
-          autoCapitalize="words"
+    <View style={styles.container}>
+      {/* Añadir el TopBar */}
+      <TopBar title="Registro" />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Image
+          source={require('../../assets/fondo_registro.jpg')} // Asegúrate de que la ruta es correcta
+          style={styles.backgroundImage}
         />
-        <TextInput
-          label="Nombre de Usuario"
-          value={nombreUsuario}
-          onChangeText={setNombreUsuario}
-          style={styles.input}
-          autoCapitalize="none"
-        />
-        <TextInput
-          label="Correo Electrónico"
-          value={email}
-          onChangeText={setEmail}
-          style={styles.input}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
-        <TextInput
-          label="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-          secureTextEntry
-        />
-        <TextInput
-          label="Repetir Contraseña"
-          value={repetirPassword}
-          onChangeText={setRepetirPassword}
-          style={styles.input}
-          secureTextEntry
-        />
-        {password !== repetirPassword && (
-          <HelperText type="error" visible={password !== repetirPassword}>
-            Las contraseñas no coinciden
-          </HelperText>
-        )}
+        <View style={styles.overlay}>
+          <Title style={styles.title}>Aficionado</Title>
+          <TextInput
+            label="Nombre Completo"
+            value={nombre}
+            onChangeText={setNombre}
+            style={styles.input}
+            autoCapitalize="words"
+          />
+          <TextInput
+            label="Nombre de Usuario"
+            value={nombreUsuario}
+            onChangeText={setNombreUsuario}
+            style={styles.input}
+            autoCapitalize="none"
+          />
+          <TextInput
+            label="Correo Electrónico"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          <TextInput
+            label="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+            secureTextEntry
+          />
+          <TextInput
+            label="Repetir Contraseña"
+            value={repetirPassword}
+            onChangeText={setRepetirPassword}
+            style={styles.input}
+            secureTextEntry
+          />
+          {password !== repetirPassword && (
+            <HelperText type="error" visible={password !== repetirPassword}>
+              Las contraseñas no coinciden
+            </HelperText>
+          )}
 
-        <Button mode="contained" onPress={handleRegister} style={styles.button}>
-          Registrarse
-        </Button>
-      </View>
-    </ScrollView>
+          <Button mode="contained" onPress={handleRegister} style={styles.button}>
+            Registrarse
+          </Button>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  scrollContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
