@@ -38,7 +38,7 @@ const GoleadoresGeneralScreen = () => {
 
         // Obtener la clasificación
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CMP_Goleadores?cod_primaria=1000128&codcompeticion=1005401&codtemporada=19&codgrupo=1005402`,
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CMP_Goleadores?cod_primaria=1000128&codcompeticion=1007391&codtemporada=20&codgrupo=1007399&cod_agrupacion=1`,
           {
             withCredentials: true,
           }

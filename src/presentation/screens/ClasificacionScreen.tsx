@@ -35,7 +35,7 @@ const ClasificacionScreen = () => {
         await axios.post('https://aranjuez.ffmadrid.es/nfg/NLogin?NUser=M7445&NPass=1010');
 
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=${selectedJornada}&codcompeticion=1005401&codgrupo=1005402&cod_agrupacion=1`,
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_VisClasificacion?cod_primaria=1000128&codjornada=${selectedJornada}&codcompeticion=1007391&codgrupo=1007399&codjornada=1&cod_agrupacion=1`,
           { withCredentials: true }
         );
 

@@ -24,7 +24,7 @@ const CalendarioScreen: React.FC = () => {
   const [divContent, setDivContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [selectedJornada, setSelectedJornada] = useState(30); 
+  const [selectedJornada, setSelectedJornada] = useState(1); 
   const { width } = useWindowDimensions(); 
   const isPortrait = width < 600; 
 
@@ -37,7 +37,7 @@ const CalendarioScreen: React.FC = () => {
         await axios.post('https://aranjuez.ffmadrid.es/nfg/NLogin?NUser=M7445&NPass=1010');
 
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodCompeticion=1005401&CodGrupo=1005402&CodTemporada=19&CodJornada=${selectedJornada}&cod_agrupacion=1&Sch_Tipo_Juego=1`,
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodTemporada=20&CodGrupo=1007399&CodCompeticion=1007391&CodJornada=${selectedJornada}&cod_agrupacion=1`,
           { withCredentials: true }
         );
 
