@@ -18,11 +18,23 @@ const cleanHTML = (html: string) => {
 };
 
 const CalendarioScreen: React.FC = () => {
+  const hoy = new Date();
   const [results, setResults] = useState<Array<{ homeTeam: string; awayTeam: string; resultadoHome: string, resultadoAway: string, date: string; campo: string }> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [selectedJornada, setSelectedJornada] = useState(1); 
+  const fechasjornadas = ['28/09/24','06/10/24','12/10/24','20/10/24','26/10/24','03/11/24','09/11/24','17/11/24','23/11/24','01/12/24','14/12/24','22/12/24','11/01/25','19/01/25','25/01/25','02/02/25','08/02/25','16/02/25','22/02/25','02/03/25','08/03/25','16/03/25','22/03/25','30/03/25','05/04/25','13/04/25','26/04/25','11/05/25','17/05/25', '25/05/25' ];
+
+  let index = 1;
+  fechasjornadas.forEach(fecha => {
+    let fechaDate = new Date(fecha);
+    if (fechaDate < hoy) {
+      index++;
+    }
+  });
+
+  const [selectedJornada, setSelectedJornada] = useState(index); 
   const { width } = useWindowDimensions(); 
+
 
   useEffect(() => {
     const fetchCalendario = async () => {
@@ -35,7 +47,7 @@ const CalendarioScreen: React.FC = () => {
 
         // Obtener la jornada seleccionada
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodCompeticion=1007391&CodGrupo=1007399&CodTemporada=20&CodJornada=${selectedJornada}&cod_agrupacion=1&Sch_Tipo_Juego=1`,
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodCompeticion=1005401&CodGrupo=1005402&CodTemporada=19&CodJornada=${selectedJornada}&cod_agrupacion=1&Sch_Tipo_Juego=1`,
           { withCredentials: true }
         );
 
@@ -96,7 +108,7 @@ const CalendarioScreen: React.FC = () => {
           onValueChange={(itemValue) => setSelectedJornada(itemValue)}
         >
           {[...Array(30).keys()].map(i => (
-            <Picker.Item key={i + 1} label={`Jornada ${i + 1}`} value={i + 1} />
+            <Picker.Item key={i + 1} label={`Jornada ${i + 1} (${fechasjornadas[i]})`} value={i + 1} />
           ))}
         </Picker>
       </View>
