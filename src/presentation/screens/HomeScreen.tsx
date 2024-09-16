@@ -66,7 +66,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         />
         <Image
           source={require('../../assets/logo_juanjo.png')}
-          style={styles.logoMaderasa}
+          style={styles.logoJuanjo}
         />
       </View>
 
@@ -127,8 +127,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   sponsorsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'center',
     marginHorizontal: 40,
     marginBottom: 30,
@@ -148,8 +147,14 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   logoMaderasa: {
-    width: 150,
-    height: 50,
+    width: 200,
+    height: 100,
+    resizeMode: 'contain',  
+  },
+  logoJuanjo: {
+    width: 250,
+    height: 100,
+    resizeMode: 'contain',
   },
   fullScreenMenu: {
     flex: 1,
