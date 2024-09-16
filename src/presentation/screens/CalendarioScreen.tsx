@@ -47,7 +47,7 @@ const CalendarioScreen: React.FC = () => {
 
         // Obtener la jornada seleccionada
         const response = await axios.get(
-          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodCompeticion=1005401&CodGrupo=1005402&CodTemporada=19&CodJornada=${selectedJornada}&cod_agrupacion=1&Sch_Tipo_Juego=1`,
+          `https://aranjuez.ffmadrid.es/nfg/NPcd/NFG_CmpJornada?cod_primaria=1000128&CodCompeticion=1007391&CodGrupo=1007399&CodTemporada=20&CodJornada=${selectedJornada}&cod_agrupacion=1&Sch_Tipo_Juego=1`,
           { withCredentials: true }
         );
 
