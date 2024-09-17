@@ -44,6 +44,15 @@ const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
     }
 
     try {
+      // Crear la cuenta en Supabase
+      const { error: authError } = await supabase.auth.signUp({
+        email: correo,
+        password,
+      });
+
+      if (authError) throw authError;
+
+      // Insertar el jugador en la tabla jugadores
       const { error: insertError } = await supabase.from('jugadores').insert([
         {
           nombre,
@@ -56,13 +65,6 @@ const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
       ]);
 
       if (insertError) throw insertError;
-
-      const { error: authError } = await supabase.auth.signUp({
-        email: correo,
-        password,
-      });
-
-      if (authError) throw authError;
 
       Alert.alert('Éxito', 'Registro completado. Por favor, verifica tu correo electrónico.');
       navigation.navigate('Home');
@@ -80,7 +82,6 @@ const JugadorRegisterScreen: React.FC<Props> = ({ navigation }) => {
           style={styles.backgroundImage}
         />
         <View style={styles.overlay}>
-
           <Title style={styles.title}>JUGADOR</Title>
 
           <TextInput

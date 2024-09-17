@@ -13,8 +13,11 @@ import JugadorRegisterScreen from './presentation/screens/JugadorRegisterScreen'
 import AficionadoRegisterScreen from './presentation/screens/AficionadoRegisterScreen';
 import AddNoticiaScreen from './presentation/screens/AddNoticiasScreen';
 import GoleadoresGeneralScreen from './presentation/screens/GoleadoresGeneralScreen';
-import NewsDetailScreen from './presentation/screens/NewsDetailScreen'; // Importar la pantalla de detalle de noticias
+import NewsDetailScreen from './presentation/screens/NewsDetailScreen';
+import SubirFotosScreen from './presentation/screens/SubirFotos'; 
+import ConvocatoriaScreen from './presentation/screens/AñadirConvocatoria'; 
 import { RootStackParamList } from './types/navigation';
+import Dashboard from './presentation/screens/Dashboard';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -85,6 +88,21 @@ const App = () => {
         <Stack.Screen
           name="NewsDetail"
           component={NewsDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SubirFotos" 
+          component={SubirFotosScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Convocatoria" 
+          component={ConvocatoriaScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

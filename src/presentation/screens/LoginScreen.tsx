@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ImageBackground } from 'react-native';
+import { View, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { TextInput, Button, Title } from 'react-native-paper';
 import { LoginScreenNavigationProp } from '../../types/navigation';
+import { supabase } from '../../config/supabaseClient';
 import { colors } from '../../types/theme';
 
 type Props = {
@@ -11,6 +12,28 @@ type Props = {
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true); // Mostrar el estado de carga
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        Alert.alert('Error', error.message);
+      } else if (data.user?.email === 'rayodani93@gmail.com') {
+        // Navega al dashboard si es superusuario
+        navigation.navigate('Dashboard');
+      } else {
+        // Si no es superusuario, navega a la pantalla Home
+        navigation.navigate('Home');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Algo salió mal. Inténtalo de nuevo.');
+    } finally {
+      setLoading(false); // Desactivar el estado de carga
+    }
+  };
 
   return (
     <ImageBackground
@@ -30,7 +53,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
-            theme={{ colors: { text: colors.primary, primary: colors.primary } }} // Texto y bordes en azul
+            theme={{ colors: { text: colors.primary, primary: colors.primary } }}
           />
 
           <TextInput
@@ -40,14 +63,16 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             onChangeText={setPassword}
             style={styles.input}
             secureTextEntry
-            theme={{ colors: { text: colors.primary, primary: colors.primary } }} // Texto y bordes en azul
+            theme={{ colors: { text: colors.primary, primary: colors.primary } }}
           />
 
           <Button
             mode="contained"
-            onPress={() => console.log('Iniciar sesión')}
+            onPress={handleLogin}
+            loading={loading} // Muestra un indicador de carga
+            disabled={loading} // Desactiva el botón mientras carga
             style={styles.loginButton}
-            labelStyle={{ color: colors.strongBlue }} // Texto en azul más fuerte
+            labelStyle={{ color: colors.strongBlue }}
           >
             Iniciar Sesión
           </Button>
@@ -55,7 +80,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           <Button
             mode="text"
             onPress={() => navigation.navigate('Register')}
-            labelStyle={styles.registerButtonText} // Estilo del texto directamente
+            labelStyle={styles.registerButtonText}
             style={styles.registerButton}
           >
             ¿No tienes cuenta? Regístrate
@@ -69,7 +94,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover', // Ajusta la imagen al tamaño de la pantalla
+    resizeMode: 'cover',
   },
   container: {
     flex: 1,
@@ -79,7 +104,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: '90%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fondo blanco semitransparente
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: 20,
     borderRadius: 10,
   },
