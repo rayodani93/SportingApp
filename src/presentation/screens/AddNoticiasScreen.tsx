@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Image, TouchableOpacity, Text } from 'react-native';
 import { launchImageLibrary, launchCamera, ImagePickerResponse, ImageLibraryOptions, CameraOptions } from 'react-native-image-picker';
 import { createNoticia } from '../../services/api'; // Asegúrate de que la ruta es correcta
 import { colors } from '../../types/theme';
+import { supabase } from '../../config/supabaseClient'; // Importamos supabase
 
 const AddNoticiaScreen: React.FC = () => {
   const [titulo, setTitulo] = useState('');
   const [imagen, setImagen] = useState<string | null>(null);
   const [contenido, setContenido] = useState('');
+  const [userEmail, setUserEmail] = useState<string | null>(null); // Estado para almacenar el correo del usuario
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUserEmail(data?.user?.email || null);
+    };
+    getUser();
+  }, []);
 
   const handleAddNoticia = async () => {
     if (titulo && imagen && contenido) {
@@ -56,6 +66,14 @@ const AddNoticiaScreen: React.FC = () => {
     });
   };
 
+  if (userEmail !== 'rayodani93@gmail.com') {
+    return (
+      <View style={styles.container}>
+        <Text>No tienes acceso a esta página.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -73,17 +91,14 @@ const AddNoticiaScreen: React.FC = () => {
         numberOfLines={5}
       />
       
-      {/* Botón para seleccionar la imagen de la galería */}
       <TouchableOpacity style={styles.imageButton} onPress={handleImagePicker}>
         <Text style={styles.buttonText}>Seleccionar Imagen</Text>
       </TouchableOpacity>
 
-      {/* Botón para capturar imagen con la cámara */}
       <TouchableOpacity style={styles.imageButton} onPress={handleCameraLaunch}>
         <Text style={styles.buttonText}>Capturar Imagen</Text>
       </TouchableOpacity>
 
-      {/* Mostrar la imagen seleccionada */}
       {imagen && (
         <Image source={{ uri: imagen }} style={styles.imagePreview} />
       )}

@@ -14,8 +14,12 @@ export type RootStackParamList = {
   JugadorRegister: undefined;
   AficionadoRegister: undefined;
   AddNoticia: undefined;
-  NewsDetail: { id: number }; // Pantalla para los detalles de la noticia
+  SubirFotos: undefined; // Agrega esta ruta si no la tienes
+  Convocatoria: undefined; // Agrega esta ruta si no la tienes
+  Dashboard: undefined;
+  NewsDetail: { id: number };
 };
+
 
 export type HomeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -65,4 +69,9 @@ export type AddNoticiaScreenNavigationProp = StackNavigationProp<
 export type MiembrosScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Miembros'
+>;
+
+export type DashboardScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Dashboard'
 >;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Button } from 'react-native';
 import { supabase } from '../../config/supabaseClient';
 import { colors, commonStyles } from '../../types/theme';
 import TopBar from './components/TopBar';
@@ -20,6 +20,7 @@ type News = {
 const NoticiasScreen: React.FC<Props> = ({ navigation }) => {
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [userEmail, setUserEmail] = useState<string | null>(null); // Estado para almacenar el correo del usuario
 
   const fetchNews = async () => {
     try {
@@ -36,14 +37,20 @@ const NoticiasScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const getUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    setUserEmail(data?.user?.email || null);
+  };
+
   useEffect(() => {
     fetchNews();
+    getUser();
   }, []);
 
   const renderItem = ({ item }: { item: News }) => (
     <TouchableOpacity
       style={styles.newsItem}
-      onPress={() => navigation.navigate('NewsDetail', { id: item.id })} // Navegación a la noticia específica
+      onPress={() => navigation.navigate('NewsDetail', { id: item.id })}
     >
       <Image source={{ uri: item.imagen }} style={styles.newsImage} />
       <Text style={styles.newsTitle}>{item.titulo}</Text>
@@ -60,8 +67,15 @@ const NoticiasScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Barra superior con el título y los iconos */}
       <TopBar title="Noticias" />
+
+      {userEmail === 'rayodani93@gmail.com' && (
+        <Button
+          title="Añadir Noticia"
+          onPress={() => navigation.navigate('AddNoticia')}
+          color={colors.primary}
+        />
+      )}
 
       <FlatList
         data={news}
@@ -85,8 +99,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   newsImage: {
-    width: '100%', // Ancho completo de la pantalla
-    height: 200, // Altura ajustable
+    width: '100%',
+    height: 200,
     borderRadius: 10,
   },
   newsTitle: {
