@@ -32,5 +32,11 @@ export const useSupabaseAuth = () => {
     };
   }, []);
 
-  return { user: user ?? { email: '' }, loading };
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
+  return { user: user ?? { email: '' }, loading, signOut };
 };
+

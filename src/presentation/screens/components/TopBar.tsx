@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../types/navigation';
 import { colors } from '../../../types/theme';
+import { supabase } from '../../../config/supabaseClient';
+import { useSupabaseAuth } from '../../../config/useSupabaseAuth';
 
 type Props = {
-  title: string;
+  title: string | React.ReactNode; // Cambiado para aceptar string o React node
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
@@ -16,6 +17,7 @@ type NavigationProp = StackNavigationProp<RootStackParamList>;
 const TopBar: React.FC<Props> = ({ title }) => {
   const navigation = useNavigation<NavigationProp>();
   const [menuVisible, setMenuVisible] = useState(false);
+  const { user } = useSupabaseAuth(); // Obtén el usuario autenticado
 
   const menuOptions = [
     { label: 'Miembros', value: 'Miembros' },
@@ -25,60 +27,47 @@ const TopBar: React.FC<Props> = ({ title }) => {
     { label: 'Goleadores', value: 'Goleadores' },
   ];
 
-  const handleNavigation = (screen: 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores') => {
+  if (user?.email) {
+    menuOptions.push({ label: 'Cerrar Sesión', value: 'CerrarSesion' });
+  }
+
+  const handleNavigation = async (screen: string) => {
     setMenuVisible(false);
-    navigation.navigate(screen);
+    if (screen === 'CerrarSesion') {
+      const { error } = await supabase.auth.signOut();
+      if (!error) {
+        Alert.alert('Sesión cerrada', 'Has cerrado sesión correctamente.');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', 'Hubo un problema al cerrar sesión.');
+      }
+    } else {
+      navigation.navigate(screen as 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores');
+    }
   };
 
   return (
-    /*<View style={styles.topBar}>
-      <View style={styles.leftIcons}>
-        
-        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Calendario')}>
-          <Icon name="calendar" size={30} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Goleadores')}>
-          <Icon name="soccer-ball-o" size={30} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Miembros')}>
-          <Icon name="users" size={30} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.title}>{title}</Text>
-
-      <View style={styles.rightIcons}>
-        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Clasificacion')}>
-          <Icon name="list" size={30} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Noticias')}>
-          <Icon name="newspaper-o" size={30} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
-          <Icon name="home" size={30} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
-    </View>*/
     <View style={styles.containerNav}>
-    <TouchableOpacity
-      style={styles.menuButton}
-      activeOpacity={0.7}
-      onPress={() => setMenuVisible(true)}
-    >
-      <Icon name="bars" size={30} color={colors.primary} />
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.menuButton}
+        activeOpacity={0.7}
+        onPress={() => setMenuVisible(true)}
+      >
+        <Icon name="bars" size={30} color={colors.primary} />
+      </TouchableOpacity>
 
-    <Text style={styles.title}>{title}</Text>
+      {/* Renderiza un componente de imagen o un texto como título */}
+      {typeof title === 'string' ? (
+        <Text style={styles.title}>{title}</Text>
+      ) : (
+        title
+      )}
 
-    <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
-          <Icon name="home" size={30} color={colors.primary} />
-    </TouchableOpacity>
+      <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
+        <Icon name="home" size={30} color={colors.primary} />
+      </TouchableOpacity>
 
-    <Modal
+      <Modal
         animationType="slide"
         transparent={false}
         visible={menuVisible}
@@ -98,7 +87,7 @@ const TopBar: React.FC<Props> = ({ title }) => {
               <TouchableOpacity
                 key={index}
                 style={styles.modalOption}
-                onPress={() => handleNavigation(option.value as 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores')}
+                onPress={() => handleNavigation(option.value)}
               >
                 <Text style={styles.modalText}>{option.label}</Text>
               </TouchableOpacity>
@@ -106,46 +95,28 @@ const TopBar: React.FC<Props> = ({ title }) => {
           </View>
         </View>
       </Modal>
-  </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  topBar: {
-    height: 50,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-  },
-  leftIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rightIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    marginHorizontal: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.primary,
-    textAlign: 'center',
-    flex: 1,
-  },
-  menuButton: {
-    marginLeft: 8,
-  },
   containerNav: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
     backgroundColor: colors.white,
+  },
+  menuButton: {
+    marginLeft: 8,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.primary,
+  },
+  icon: {
+    marginRight: 8,
   },
   fullScreenMenu: {
     flex: 1,

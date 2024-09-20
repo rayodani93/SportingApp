@@ -1,161 +1,134 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Alert, Image, ScrollView } from 'react-native';
-import { TextInput, Button, Title, HelperText } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { View, Button, Image, Alert, StyleSheet, TouchableOpacity, Text, ImageBackground } from 'react-native';
+import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
+import { Picker } from '@react-native-picker/picker';
 import { supabase } from '../../config/supabaseClient';
-import { RegisterScreenNavigationProp } from '../../types/navigation';
-import { colors } from '../../types/theme';
-import TopBar from './components/TopBar';
+import { colors, commonStyles } from '../../types/theme';
 
-type Props = {
-  navigation: RegisterScreenNavigationProp;
-};
+const SubirFotos = () => {
+  const [jugadores, setJugadores] = useState<any[]>([]); 
+  const [selectedPlayer, setSelectedPlayer] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); 
 
-const AficionadoRegisterScreen: React.FC<Props> = ({ navigation }) => {
-  const [nombre, setNombre] = useState('');
-  const [nombreUsuario, setNombreUsuario] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repetirPassword, setRepetirPassword] = useState('');
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const { data, error } = await supabase.from('jugadores').select('id, nombre');
+      if (error) {
+        Alert.alert('Error', error.message);
+      } else {
+        setJugadores(data || []);
+      }
+    };
+    fetchPlayers();
+  }, []);
 
-  const handleRegister = async () => {
-    if (!nombre || !nombreUsuario || !email || !password || !repetirPassword) {
-      Alert.alert('Error', 'Todos los campos son obligatorios');
+  const handleImagePicker = () => {
+    launchImageLibrary({ mediaType: 'photo', quality: 1 }, (response: ImagePickerResponse) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.error('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        setSelectedImage(response.assets[0].uri || null);
+      }
+    });
+  };
+
+  const handleUpload = async () => {
+    if (!selectedPlayer) {
+      Alert.alert('Error', 'Por favor selecciona un jugador.');
+      return;
+    }
+    if (!selectedImage) {
+      Alert.alert('Error', 'Por favor selecciona una imagen.');
       return;
     }
 
-    if (password !== repetirPassword) {
-      Alert.alert('Error', 'Las contraseñas no coinciden');
-      return;
-    }
+    const filePath = `jugadores/${selectedPlayer}.jpg`;
 
-    try {
-      const { error: insertError } = await supabase.from('seguidores').insert([
-        {
-          nombre,
-          email,
-          contrasena: password,
-        },
-      ]);
+    const response = await fetch(selectedImage);
+    const blob = await response.blob();
 
-      if (insertError) throw insertError;
+    const { error: uploadError } = await supabase.storage.from('jugadores').upload(filePath, blob, {
+      cacheControl: '3600',
+      upsert: true,
+    });
 
-      const { error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+    if (uploadError) {
+      Alert.alert('Error al subir imagen', uploadError.message);
+    } else {
+      const { error: updateError } = await supabase
+        .from('jugadores')
+        .update({ foto: filePath })
+        .eq('id', selectedPlayer);
 
-      if (authError) throw authError;
-
-      Alert.alert('Éxito', 'Registro completado. Por favor, verifica tu correo electrónico.');
-      navigation.navigate('Home');
-    } catch (error) {
-      Alert.alert('Error', (error as Error).message);
+      if (updateError) {
+        Alert.alert('Error al actualizar jugador', updateError.message);
+      } else {
+        Alert.alert('Éxito', 'Foto subida correctamente.');
+      }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <TopBar title="Registro" />
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Image
-          source={require('../../assets/fondo_registro.jpg')}
-          style={styles.backgroundImage}
-        />
-        <View style={styles.overlay}>
-          <Title style={styles.title}>Aficionado</Title>
-          <TextInput
-            label="Nombre Completo"
-            value={nombre}
-            onChangeText={setNombre}
-            style={styles.input}
-            autoCapitalize="words"
-          />
-          <TextInput
-            label="Nombre de Usuario"
-            value={nombreUsuario}
-            onChangeText={setNombreUsuario}
-            style={styles.input}
-            autoCapitalize="none"
-          />
-          <TextInput
-            label="Correo Electrónico"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-          <TextInput
-            label="Contraseña"
-            value={password}
-            onChangeText={setPassword}
-            style={styles.input}
-            secureTextEntry
-          />
-          <TextInput
-            label="Repetir Contraseña"
-            value={repetirPassword}
-            onChangeText={setRepetirPassword}
-            style={styles.input}
-            secureTextEntry
-          />
-          {password !== repetirPassword && (
-            <HelperText type="error" visible={password !== repetirPassword}>
-              Las contraseñas no coinciden
-            </HelperText>
-          )}
-
-          <Button mode="contained" onPress={handleRegister} style={styles.button}>
-            Registrarse
-          </Button>
+    <ImageBackground source={require('../../assets/Messi.jpeg')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedPlayer}
+            onValueChange={(itemValue) => setSelectedPlayer(itemValue)}
+            style={styles.picker}
+          >
+            {jugadores.map((jugador) => (
+              <Picker.Item key={jugador.id} label={jugador.nombre} value={jugador.id} />
+            ))}
+          </Picker>
         </View>
-      </ScrollView>
-    </View>
+
+        <TouchableOpacity style={commonStyles.button} onPress={handleImagePicker}>
+          <Text style={commonStyles.buttonText}>Seleccionar Imagen</Text>
+        </TouchableOpacity>
+
+        {selectedImage && <Image source={{ uri: selectedImage }} style={styles.imagePreview} />}
+
+        <TouchableOpacity style={commonStyles.button} onPress={handleUpload}>
+          <Text style={commonStyles.buttonText}>Subir Foto</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-    position: 'relative',
-  },
-  scrollContainer: {
-    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
   },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  overlay: {
-    width: '90%',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 10,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
   },
-  title: {
-    fontSize: 24,
+  pickerContainer: {
     marginBottom: 20,
-    color: colors.primary,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
-  input: {
-    marginBottom: 15,
+  picker: {
+    height: 50,
     width: '100%',
     backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderWidth: 1,
+    borderRadius: 8,
   },
-  button: {
-    backgroundColor: colors.primary,
+  imagePreview: {
     width: '100%',
-    paddingVertical: 10,
+    height: 300,
+    marginVertical: 20,
+    resizeMode: 'contain',
+    borderRadius: 10,
   },
 });
 
-export default AficionadoRegisterScreen;
+export default SubirFotos;
