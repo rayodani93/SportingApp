@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../types/navigation';
 import { colors } from '../../../types/theme';
@@ -16,6 +16,8 @@ type NavigationProp = StackNavigationProp<RootStackParamList>;
 
 const TopBar: React.FC<Props> = ({ title }) => {
   const navigation = useNavigation<NavigationProp>();
+  const route = useRoute();
+  const isHome = route.name == 'Home';
   const [menuVisible, setMenuVisible] = useState(false);
   const { user } = useSupabaseAuth(); // Obtén el usuario autenticado
 
@@ -63,9 +65,18 @@ const TopBar: React.FC<Props> = ({ title }) => {
         title
       )}
 
-      <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
-        <Icon name="home" size={30} color={colors.primary} />
-      </TouchableOpacity>
+      {isHome ? (
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Register')}>
+            <Icon name="user" size={30} color={colors.primary} />
+          </TouchableOpacity>
+        ) 
+        : 
+        (     
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" size={30} color={colors.primary} />
+          </TouchableOpacity>
+        )}
+
 
       <Modal
         animationType="slide"
@@ -105,6 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
+    marginBottom: 20,
     backgroundColor: colors.white,
   },
   menuButton: {
