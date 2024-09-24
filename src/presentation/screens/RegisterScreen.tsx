@@ -37,21 +37,6 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
           source={require('../../assets/Masen.jpeg')} 
           style={styles.image}
         />
-
-        {/* Botón para Aficionado */}
-        <TouchableOpacity 
-          style={[styles.button, styles.fanButton]} 
-          onPress={() => navigation.navigate('AficionadoRegister')}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.buttonText}>Aficionado</Text>
-        </TouchableOpacity>
-
-        {/* Imagen de Aficionado */}
-        <Image 
-          source={require('../../assets/Fari.jpeg')} 
-          style={styles.image}
-        />
       </View>
     </View>
   );

@@ -22,11 +22,9 @@ const TopBar: React.FC<Props> = ({ title }) => {
   const { user } = useSupabaseAuth(); // Obtén el usuario autenticado
 
   const menuOptions = [
-    { label: 'Miembros', value: 'Miembros' },
-    { label: 'Noticias', value: 'Noticias' },
     { label: 'Calendario', value: 'Calendario' },
     { label: 'Clasificación', value: 'Clasificacion' },
-    { label: 'Goleadores', value: 'Goleadores' },
+    { label: 'Goleadores', value: 'GoleadoresGeneral' },
   ];
 
   if (user?.email) {
@@ -44,7 +42,7 @@ const TopBar: React.FC<Props> = ({ title }) => {
         Alert.alert('Error', 'Hubo un problema al cerrar sesión.');
       }
     } else {
-      navigation.navigate(screen as 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores');
+      navigation.navigate(screen as 'Calendario' | 'Clasificacion' | 'Goleadores');
     }
   };
 
