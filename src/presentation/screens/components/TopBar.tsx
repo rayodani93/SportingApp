@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../types/navigation';
 import { colors } from '../../../types/theme';
@@ -18,13 +18,15 @@ const TopBar: React.FC<Props> = ({ title }) => {
   const navigation = useNavigation<NavigationProp>();
   const [menuVisible, setMenuVisible] = useState(false);
   const { user } = useSupabaseAuth(); // Obtén el usuario autenticado
+  const route = useRoute();
+  const isNotHomeScreen = route.name !== 'Home';
 
   const menuOptions = [
-    { label: 'Miembros', value: 'Miembros' },
-    { label: 'Noticias', value: 'Noticias' },
+    //{ label: 'Miembros', value: 'Miembros' },
+    //{ label: 'Noticias', value: 'Noticias' },
     { label: 'Calendario', value: 'Calendario' },
     { label: 'Clasificación', value: 'Clasificacion' },
-    { label: 'Goleadores', value: 'Goleadores' },
+    { label: 'Goleadores', value: 'GoleadoresGeneral' },
   ];
 
   if (user?.email) {
@@ -42,7 +44,7 @@ const TopBar: React.FC<Props> = ({ title }) => {
         Alert.alert('Error', 'Hubo un problema al cerrar sesión.');
       }
     } else {
-      navigation.navigate(screen as 'Miembros' | 'Noticias' | 'Calendario' | 'Clasificacion' | 'Goleadores');
+      navigation.navigate(screen as /*'Miembros' | 'Noticias' |*/ 'Calendario' | 'Clasificacion' | 'Goleadores');
     }
   };
 
@@ -63,9 +65,10 @@ const TopBar: React.FC<Props> = ({ title }) => {
         title
       )}
 
+      {isNotHomeScreen ? (
       <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('Home')}>
         <Icon name="home" size={30} color={colors.primary} />
-      </TouchableOpacity>
+      </TouchableOpacity>) : ('') }
 
       <Modal
         animationType="slide"
@@ -101,10 +104,11 @@ const TopBar: React.FC<Props> = ({ title }) => {
 
 const styles = StyleSheet.create({
   containerNav: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
+    marginBottom: 10,
     backgroundColor: colors.white,
   },
   menuButton: {

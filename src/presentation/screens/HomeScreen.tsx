@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   logo: {
-    width: 120, // Tamaño del logo
-    height: 50,
+    width: 160, // Tamaño del logo
+    height: 80,
     resizeMode: 'contain',
   },
   logoMaderasa: {
