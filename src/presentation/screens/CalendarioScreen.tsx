@@ -22,7 +22,7 @@ const CalendarioScreen: React.FC = () => {
   const [results, setResults] = useState<Array<{ homeTeam: string; awayTeam: string; resultadoHome: string, resultadoAway: string, date: string; campo: string }> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const fechasjornadas = ['28/09/24','06/10/24','12/10/24','20/10/24','26/10/24','03/11/24','09/11/24','17/11/24','23/11/24','01/12/24','14/12/24','22/12/24','11/01/25','19/01/25','25/01/25','02/02/25','08/02/25','16/02/25','22/02/25','02/03/25','08/03/25','16/03/25','22/03/25','30/03/25','05/04/25','13/04/25','26/04/25','11/05/25','17/05/25', '25/05/25' ];
+  const fechasjornadas = ['28/09/24','06/10/24','20/10/24','26/10/24','09/11/24','17/11/24','23/11/24','01/12/24','14/12/24','22/12/24','11/01/25','19/01/25','25/01/25','02/02/25','08/02/25','16/02/25','22/02/25','02/03/25','08/03/25','16/03/25','22/03/25','30/03/25','05/04/25','13/04/25','26/04/25','11/05/25','17/05/25', '25/05/25', '31/05/25', '08/06/25' ];
 
   let index = 1;
   fechasjornadas.forEach(fecha => {
@@ -68,7 +68,8 @@ const CalendarioScreen: React.FC = () => {
             const awayTeamElem = findAll(elem => elem.name === 'a', [row])[1];
             const resultadoHomeElem = findAll(elem => hasAttrib(elem, 'class') && getAttributeValue(elem, 'class') === 'resultado_cerrada', [row])[0];
             const resultadoAwayElem = findAll(elem => hasAttrib(elem, 'class') && getAttributeValue(elem, 'class') === 'resultado_cerrada', [row])[1];
-            const dateElem = findAll(elem => hasAttrib(elem, 'class') && getAttributeValue(elem, 'class') === 'esconder', [row])[0];
+            const dateElem1 = findAll(elem => hasAttrib(elem, 'class') && getAttributeValue(elem, 'class') === 'esconder', [row])[0];
+            const dateElem2 = findAll(elem => hasAttrib(elem, 'class') && getAttributeValue(elem, 'class') === 'esconder', [row])[1];
             const campoElem = findAll(elem => hasAttrib(elem, 'width') && getAttributeValue(elem, 'width') === '263<tml_else>476', [row])[0];
 
             // Verificamos si los elementos existen antes de procesarlos
@@ -76,7 +77,7 @@ const CalendarioScreen: React.FC = () => {
             const awayTeam = awayTeamElem ? cleanHTML(getInnerHTML(awayTeamElem)) : "Equipo visitante no disponible";
             const resultadoHome = resultadoHomeElem ? cleanHTML(getInnerHTML(resultadoHomeElem)) : '';
             const resultadoAway = resultadoAwayElem ? cleanHTML(getInnerHTML(resultadoAwayElem)) : '';
-            const date = dateElem ? cleanHTML(getInnerHTML(dateElem)) : "Fecha no disponible";
+            const date = dateElem1 && dateElem2 ? cleanHTML(getInnerHTML(dateElem1)) + cleanHTML(getInnerHTML(dateElem2)): "Fecha no disponible";
             const campo = campoElem ? cleanHTML(getInnerHTML(campoElem)) : "Campo no disponible";
 
             return { homeTeam, awayTeam, resultadoHome, resultadoAway, date, campo };
