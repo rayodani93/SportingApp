@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Image, TouchableOpacity, Text } from 'react-native';
 import { launchImageLibrary, launchCamera, ImagePickerResponse, ImageLibraryOptions, CameraOptions } from 'react-native-image-picker';
-import { createNoticia } from '../../services/api'; // Asegúrate de que la ruta es correcta
+import { createNoticia } from '../../services/api'; 
 import { colors } from '../../types/theme';
 import { supabase } from '../../config/supabaseClient'; // Importamos supabase
 
@@ -9,7 +9,7 @@ const AddNoticiaScreen: React.FC = () => {
   const [titulo, setTitulo] = useState('');
   const [imagen, setImagen] = useState<string | null>(null);
   const [contenido, setContenido] = useState('');
-  const [userEmail, setUserEmail] = useState<string | null>(null); // Estado para almacenar el correo del usuario
+  const [userEmail, setUserEmail] = useState<string | null>(null); 
 
   useEffect(() => {
     const getUser = async () => {
