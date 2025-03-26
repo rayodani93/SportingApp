@@ -14,8 +14,8 @@ export type RootStackParamList = {
   JugadorRegister: undefined;
   AficionadoRegister: undefined;
   AddNoticia: undefined;
-  SubirFotos: undefined; // Agrega esta ruta si no la tienes
-  Convocatoria: undefined; // Agrega esta ruta si no la tienes
+  SubirFotos: undefined; 
+  Convocatoria: undefined; 
   Dashboard: undefined;
   NewsDetail: { id: number };
 };
